@@ -1,0 +1,25 @@
+.random-name {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+
+.random-name h1 {
+  font-size: 2rem;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+.random-name ul {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  align-items: center;
+
+
+}

@@ -1,0 +1,56 @@
+.main-menu {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.4);
+    border-bottom: 1px solid #e5e5e5;
+    padding: 7px 0;
+
+overflow: hidden;
+    height: 22px;
+}
+
+
+.main-menu ul {
+    display: flex;
+    gap: 1dvw;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+
+    >* {
+        text-decoration: underline;
+        padding: 2px;
+        position: relative;
+
+
+    }
+    :hover {
+        cursor: pointer;
+    }
+
+    >*::before {
+        content: "";
+        display: block;
+        position :absolute;
+        top:-2px;
+        left:-5px;
+        padding: 6px;
+
+        border-radius: 6px;
+        width: 100%;
+        height: 35px;
+        z-index: -1;
+    }
+
+    >.active::before {
+        background-color: #fff;
+    }
+
+    >.inactive:hover::before {
+        background-color: #e5e5e5;
+    }
+
+}

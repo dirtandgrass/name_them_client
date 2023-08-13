@@ -1,0 +1,10 @@
+.App {
+  text-align: center;
+  display: flex;
+}
+
+.App-header {
+  position: sticky;
+  top: 0;
+  background-color: var(--background-color);
+}

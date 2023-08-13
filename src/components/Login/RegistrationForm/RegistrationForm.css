@@ -1,0 +1,42 @@
+
+#registration-form:modal {
+  margin: 25dvh auto;
+  position: relative;
+  min-width: 30dvw;
+  border: var(--message-border);
+  border-color: var(--message-border-color);
+  border-radius: var(--message-border-radius);
+  padding: var(--message-padding);
+}
+
+#registration-form>form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding: 1dvh 2dvw;
+  gap: 1dvh;
+}
+
+#registration-form h2 {
+  margin:0.1em;
+}
+
+#registration-form .form_actions {
+  display: flex;
+  justify-content:flex-end;
+  width: 100%;
+  gap: 1dvw;
+}
+
+#registration-form>form input {
+  border-radius: 5px;
+  border: 1px solid rgb(153, 153, 255);
+  padding: 0.5dvh 1dvw;
+  font-size: 1.2rem;
+}
+
+#registration-form::backdrop {
+  background: linear-gradient(45deg,rgba(188, 255, 190,0.1),rgba(188, 255, 190,0.8));
+  backdrop-filter: blur(2px);
+
+}

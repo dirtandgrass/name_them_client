@@ -1,0 +1,22 @@
+.login, .login>div, .login form {
+
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  min-height: 4dvh;
+  gap: 1dvw;
+}
+
+@media (max-width: 520px) {
+  .login, .login>div, .login form {
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    gap: 3px;
+    padding: 8px 0;
+  }
+}
+
+.login {
+  background-color: rgba(100, 100, 100, 0.2);
+}
