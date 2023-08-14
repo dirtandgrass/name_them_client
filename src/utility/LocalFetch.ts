@@ -8,7 +8,7 @@ export enum HttpMethod {
   PATCH = 'PATCH'
 }
 
-const API_PATH = "http://localhost:3000/"
+const API_PATH = "http://localhost:3000/api/"
 
 export default async function localFetch({ path, method, data, user }: { path: string, method?: HttpMethod, data?: object, user?: User }): Promise<object> {
 

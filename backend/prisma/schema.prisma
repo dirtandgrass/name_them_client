@@ -1,0 +1,115 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model name {
+  name_id                               Int           @id(map: "name_pk") @default(autoincrement())
+  name                                  String        @db.VarChar
+  male                                  Boolean       @default(false)
+  female                                Boolean       @default(false)
+  rating                                rating[]
+  similar_similar_name_idToname         similar[]     @relation("similar_name_idToname")
+  similar_similar_similar_name_idToname similar[]     @relation("similar_similar_name_idToname")
+  source_name                           source_name[]
+}
+
+model source {
+  source_id   Int           @id(map: "source_pk") @default(autoincrement())
+  name        String
+  url         String?       @db.VarChar
+  description String?       @db.VarChar
+  source_name source_name[]
+}
+
+model source_name {
+  source_name_id Int    @id(map: "source_name_pk") @default(autoincrement())
+  name_id        Int
+  source_id      Int
+  name           name   @relation(fields: [name_id], references: [name_id], onDelete: NoAction, onUpdate: NoAction, map: "source_name_fk")
+  source         source @relation(fields: [source_id], references: [source_id], onDelete: NoAction, onUpdate: NoAction, map: "source_name_fk_1")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model similar {
+  similar_id                         Int  @id(map: "name_name_pk") @default(autoincrement())
+  name_id                            Int
+  similar_name_id                    Int
+  name_similar_name_idToname         name @relation("similar_name_idToname", fields: [name_id], references: [name_id], onDelete: NoAction, onUpdate: NoAction, map: "name_name_fk")
+  name_similar_similar_name_idToname name @relation("similar_similar_name_idToname", fields: [similar_name_id], references: [name_id], onDelete: NoAction, onUpdate: NoAction, map: "name_name_fk_1")
+
+  @@unique([name_id, similar_name_id], map: "similar_un")
+}
+
+model session {
+  session_id Int      @id(map: "session_pk") @default(autoincrement())
+  user_id    Int
+  hash       String   @db.VarChar(256)
+  created    DateTime @default(now()) @db.Timestamp(6)
+  expires    DateTime @default(dbgenerated("(CURRENT_TIMESTAMP + '14 days'::interval)")) @db.Timestamp(6)
+  user       user     @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "session_fk")
+}
+
+model user {
+  user_id         Int          @id(map: "user_pk") @default(autoincrement())
+  username        String       @unique(map: "user_username") @db.VarChar
+  email           String       @unique(map: "user_un") @db.VarChar
+  hash            String       @db.VarChar(256)
+  date_created    DateTime     @default(dbgenerated("CURRENT_DATE")) @db.Date
+  validated       Boolean      @default(false)
+  validation_code String?      @db.VarChar(256)
+  group           group[]
+  group_user      group_user[]
+  rating          rating[]
+  session         session[]
+}
+
+model rating {
+  rating_id Int     @id(map: "name_rating_pk") @default(autoincrement())
+  user_id   Int
+  name_id   Int
+  rating    Decimal @db.Decimal
+  group_id  Int
+  name      name    @relation(fields: [name_id], references: [name_id], onDelete: NoAction, onUpdate: NoAction, map: "name_rating_fk")
+  user      user    @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "name_rating_fk_1")
+  group     group   @relation(fields: [group_id], references: [group_id], onDelete: NoAction, onUpdate: NoAction, map: "rating_fk")
+
+  @@unique([user_id, name_id, group_id], map: "rating_un")
+}
+
+model group {
+  group_id        Int          @id(map: "group_pk") @default(autoincrement())
+  name            String?      @db.VarChar
+  created_user_id Int
+  description     String?      @db.VarChar
+  user            user         @relation(fields: [created_user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "group_fk")
+  group_user      group_user[]
+  rating          rating[]
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model group_user {
+  group_user_id Int       @id(map: "group_user_pk") @default(autoincrement())
+  group_id      Int
+  user_id       Int?
+  weight        Decimal   @default(1) @db.Decimal
+  invite_key    String?   @db.VarChar(256)
+  email         String?   @db.VarChar
+  accepted      Boolean   @default(false)
+  role          role?
+  invite_date   DateTime? @default(now()) @db.Timestamp(6)
+  group         group     @relation(fields: [group_id], references: [group_id], onDelete: NoAction, onUpdate: NoAction, map: "group_user_fk")
+  user          user?     @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "group_user_fk_1")
+
+  @@unique([group_id, user_id], map: "group_user_un")
+}
+
+enum role {
+  admin
+  participant
+}

@@ -29,7 +29,9 @@ function App() {
 
   const [page, setPage] = useStorage<PageType>("page", PageType.names, "local");
 
-  const [loggedIn, setLoggedIn] = useState<boolean>(false);
+  const [loggedIn, setLoggedIn] = useState<boolean>(
+    (user?.isLoggedIn && user?.isLoggedIn()) ?? false
+  );
 
   useEffect(() => {
     setLoggedIn((user?.isLoggedIn && user?.isLoggedIn()) ?? false);

@@ -10,7 +10,7 @@ export const topRated = async ({ user: user, group_id, count = 5, sex = Sex.all 
   try {
 
     const response: any = await localFetch({
-      path: `rating/top/${group_id}/?count=${count}&sex=${sex}`,
+      path: `rating/?action=top&group_id=${group_id}&count=${count}&sex=${sex}`,
       user: user,
     });
 

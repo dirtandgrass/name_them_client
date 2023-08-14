@@ -48,7 +48,7 @@ function RateName({
     } else {
       console.error(result.message);
     }
-    setLoading(false); // Set loading state to false once the rating is done
+    //setLoading(false);
   };
 
   useEffect(() => {

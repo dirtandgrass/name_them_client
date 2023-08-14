@@ -16,7 +16,7 @@ function LoginForm({
     };
 
     const result = (await localFetch({
-      path: "user/login/",
+      path: "user/?action=login",
       method: HttpMethod.POST,
       data,
     })) as {
