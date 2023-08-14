@@ -14,7 +14,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     switch (action) {
       case "login": {
-        console.log(req.body);
         if (req.body.user_id && req.body.session_id && req.body.hash) {
           //login with user_id, session_id, and hash
 
@@ -34,7 +33,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           }
         } else if (req.body.login_email && req.body.login_password) {
           //login with email and password
-          console.log("user pass");
+          
           let create_session = false;
           if (req.body.create_session) {
             create_session = true;
@@ -71,7 +70,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         // register a new user
         if (!req.body.register_email || !req.body.register_password || !req.body.register_username) {
           res.json({ message: "User not created", success: false });
-          console.log(req.body);
+          //console.log(req.body);
           return;
         }
         const regResult = await User.Register(req.body.register_username, req.body.register_email, req.body.register_password);
