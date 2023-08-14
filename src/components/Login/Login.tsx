@@ -3,17 +3,21 @@ import "./Login.css";
 
 import { useEffect } from "react";
 import LoginForm from "./LoginForm/LoginForm";
+import { PageType } from "../../types/Menu";
 
 function Login({
   user,
   setUser,
+  setPage,
 }: {
   user: User | undefined;
   setUser: React.Dispatch<React.SetStateAction<User>>;
+  setPage: React.Dispatch<React.SetStateAction<PageType>>;
 }) {
   useEffect(() => {
     if (!user) {
       logOut();
+      setPage(PageType.names);
       return;
     }
     // storage only stores data members, recreate User object if needed
@@ -28,7 +32,7 @@ function Login({
         )
       );
     }
-  });
+  }, []);
 
   let registrationForm = document.getElementById(
     "registration-form"
@@ -36,6 +40,7 @@ function Login({
 
   function logOut() {
     setUser(defaultUser);
+    setPage(PageType.names);
   }
 
   function showRegister() {

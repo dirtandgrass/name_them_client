@@ -20,7 +20,7 @@ function RegistrationForm() {
     };
 
     const result = (await localFetch({
-      path: "user/",
+      path: "user/?action=register",
       method: HttpMethod.POST,
       data,
     })) as {

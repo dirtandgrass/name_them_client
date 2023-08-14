@@ -14,7 +14,7 @@ function NameSource({ name }: { name: NameType }) {
   const fetchSources = async () => {
     setLoading(true);
     try {
-      console.log("name sources id", name.name_id);
+      //console.log("name sources id", name.name_id);
       const response: any = await localFetch({
         path: `source/?name_id=${name.name_id}`,
       });

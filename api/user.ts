@@ -2,6 +2,7 @@
 
 import { VercelRequest, VercelResponse } from '@vercel/node';
 import User, { UserData } from '../backend/model/user';
+import mailer from '../backend/utility/mailer';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method === "GET") {
@@ -33,7 +34,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           }
         } else if (req.body.login_email && req.body.login_password) {
           //login with email and password
-          
+
           let create_session = false;
           if (req.body.create_session) {
             create_session = true;
@@ -67,6 +68,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         return { message: "User not logged in", success: false };
       }
       case "register": {
+
         // register a new user
         if (!req.body.register_email || !req.body.register_password || !req.body.register_username) {
           res.json({ message: "User not created", success: false });
@@ -76,20 +78,23 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         const regResult = await User.Register(req.body.register_username, req.body.register_email, req.body.register_password);
 
         if (!regResult || !regResult.user) {
-          res.json({ message: "User not created", success: false });
+          res.json({ message: "User not created: user already exists", success: false });
           return;
         }
 
-        const user = regResult.user as UserData & { code?: string }
+        const user = regResult.user as UserData & { validation_code?: string }
 
-
+        console.log("User created", user)
         if (user.email) {
-          // TODO: send validation email
-          res.json({ code: user.code, message: `User ${regResult.user.username} created, please check your email to validate`, success: true });
+          const host = process.env.EMAIL_URL || "http://localhost:3000";
+          const sent = await mailer(user.email, "Validate your account", `Please validate your account by clicking this link: ${host}/validate?user_id=${user.user_id}&code=${user.validation_code}`)
+
+
+          res.json({ code: user.validation_code, message: `User ${regResult.user.username} created, please check your email to validate`, success: true });
           return;
         }
 
-        res.json({ code: user.code, message: `User ${regResult.user.username} created, use code ${user.code} to validate`, success: true });
+        res.json({ code: user.validation_code, message: `User ${regResult.user.username} created, use code ${user.validation_code} to validate`, success: true });
 
       }
     }

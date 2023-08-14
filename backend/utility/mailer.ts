@@ -9,7 +9,6 @@ const OAuth2 = google.auth.OAuth2;
 
 const sendMail = async (email: string, subject: string, text: string) => {
 
-  console.log("ERROR: ", email, subject, text);
   try {
     const mailOptions: Mail.Options = {
       from: process.env.USER_EMAIL,

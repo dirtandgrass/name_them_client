@@ -1,14 +1,43 @@
+import { useEffect, useState } from "react";
 import { PageType } from "../../types/Menu";
+import { User } from "../../types/User";
 import "./Menu.css";
 
 function Menu({
   setPage,
   page,
+  user,
 }: {
   setPage: React.Dispatch<React.SetStateAction<PageType>>;
   page: PageType;
+  user: User | undefined;
 }) {
-  const nav = (navPage: PageType) => setPage(navPage);
+  const [utilityMenu, setUtilityMenu] = useState<JSX.Element | undefined>(
+    <></>
+  );
+
+  useEffect(() => {
+    buildUtilityMenu();
+  }, [user]);
+
+  useEffect(() => {
+    buildUtilityMenu();
+  }, []);
+
+  const buildUtilityMenu = () => {
+    if (user) {
+      setUtilityMenu(
+        <li
+          onClick={() => setPage(PageType.groups)}
+          className={page == PageType.groups ? "active" : "inactive"}
+        >
+          Village
+        </li>
+      );
+    }
+  };
+
+  console.log("menu", utilityMenu);
 
   return (
     <div className="main-menu">
@@ -25,6 +54,7 @@ function Menu({
         >
           Results
         </li>
+        {utilityMenu}
       </ul>
     </div>
   );
