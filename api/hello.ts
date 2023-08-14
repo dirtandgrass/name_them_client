@@ -7,7 +7,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   await headerauth(req, res);
 
-  await mailer();
+
+  mailer("verdant.luke@gmail.com", "test", "test")
 
   const name = AuthUser?.username || 'World';
 

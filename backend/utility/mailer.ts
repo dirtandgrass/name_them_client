@@ -1,11 +1,14 @@
 
 import nodemailer from 'nodemailer';
 import { google } from 'googleapis';
+import SMTPTransport from 'nodemailer/lib/smtp-transport';
 
 const OAuth2 = google.auth.OAuth2;
 
 
 const sendMail = async (email: string, subject: string, text: string) => {
+
+  console.log("sendMail", email, subject, text);
   try {
     const mailOptions = {
       from: process.env.USER_EMAIL,
@@ -15,8 +18,12 @@ const sendMail = async (email: string, subject: string, text: string) => {
     }
 
     let emailTransporter = await createTransporter();
-    await emailTransporter.sendMail(mailOptions);
-    return true;
+    if (typeof emailTransporter !== "string") {
+      await emailTransporter.sendMail(mailOptions);
+      return true;
+    }
+    console.log(emailTransporter);
+    return false;
   } catch (err) {
     console.log("ERROR: ", err)
     return false;
@@ -26,7 +33,7 @@ const sendMail = async (email: string, subject: string, text: string) => {
 
 export default sendMail;
 
-const createTransporter = async () => {
+const createTransporter = async (): Promise<nodemailer.Transporter<SMTPTransport.SentMessageInfo> | string> => {
   try {
     const oauth2Client = new OAuth2(
       process.env.CLIENT_ID,
@@ -48,12 +55,18 @@ const createTransporter = async () => {
       });
     });
 
+
+    //const t:SMTPTransport.AuthenticationType =
+
+
+
+
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
         type: "OAuth2",
         user: process.env.USER_EMAIL,
-        accessToken,
+        accessToken: accessToken as string,
         clientId: process.env.CLIENT_ID,
         clientSecret: process.env.CLIENT_SECRET,
         refreshToken: process.env.REFRESH_TOKEN,
@@ -61,6 +74,6 @@ const createTransporter = async () => {
     });
     return transporter;
   } catch (err) {
-    return err
+    return err as string;
   }
 };
