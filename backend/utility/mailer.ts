@@ -8,7 +8,7 @@ const OAuth2 = google.auth.OAuth2;
 
 const sendMail = async (email: string, subject: string, text: string) => {
 
-  console.log("sendMail", email, subject, text);
+
   try {
     const mailOptions = {
       from: process.env.USER_EMAIL,
@@ -16,7 +16,7 @@ const sendMail = async (email: string, subject: string, text: string) => {
       subject,
       text
     }
-
+    console.log("sendMail", mailOptions);
     let emailTransporter = await createTransporter();
     if (typeof emailTransporter !== "string") {
       await emailTransporter.sendMail(mailOptions);
