@@ -8,11 +8,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   await headerauth(req, res);
 
 
-  mailer("verdant.luke@gmail.com", "test", "test")
+  const sent = await mailer("verdant.luke@gmail.com", "test", "test")
 
   const name = AuthUser?.username || 'World';
 
   return res.json({
-    message: `Hello ${name}!`,
+    message: `Hello ${name}!`, sent,
   })
 }

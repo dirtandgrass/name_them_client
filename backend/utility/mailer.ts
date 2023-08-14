@@ -2,21 +2,22 @@
 import nodemailer from 'nodemailer';
 import { google } from 'googleapis';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
+import Mail from 'nodemailer/lib/mailer';
 
 const OAuth2 = google.auth.OAuth2;
 
 
 const sendMail = async (email: string, subject: string, text: string) => {
 
-
+  console.log("ERROR: ", email, subject, text);
   try {
-    const mailOptions = {
+    const mailOptions: Mail.Options = {
       from: process.env.USER_EMAIL,
       to: email,
       subject,
       text
     }
-    console.log("sendMail", mailOptions);
+
     let emailTransporter = await createTransporter();
     if (typeof emailTransporter !== "string") {
       await emailTransporter.sendMail(mailOptions);
