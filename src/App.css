@@ -8,3 +8,30 @@
   top: 0;
   background-color: var(--background-color);
 }
+
+
+.global-loading {
+  width: 100dvw;
+  height: calc(100dvh - 55px);
+  position: fixed;
+  top: 55px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--backgroud-color-semi-transparent);
+  backdrop-filter: blur(2px);
+  transition: opacity 0.8s ease-in-out;
+  opacity: 0;
+  z-index:5;
+
+}
+
+.gl-active {
+  opacity: 1;
+  pointer-events: painted;
+}
+
+.gl-stopped {
+  opacity: 0;
+  pointer-events: none;
+}

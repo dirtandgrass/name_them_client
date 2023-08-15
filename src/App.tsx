@@ -1,20 +1,23 @@
 import "./App.css";
-
+import { useEffect, useMemo, useState } from "react";
 import Menu from "./components/Menu/Menu";
 
 import Login from "./components/Login/Login";
-import { User, defaultUser } from "./types/User";
-import useStorage from "./hooks/useStorage";
 import Logo from "./components/Logo/Logo";
 import RegistrationForm from "./components/Login/RegistrationForm/RegistrationForm";
-import { useEffect, useState } from "react";
-import Names from "./components/Sections/Names/Names";
-import { GroupMembershipType, defaultGroup } from "./types/Group";
 import GroupInfo from "./components/GroupInfo/GroupInfo";
-import Results from "./components/Sections/Results/Results";
-import { validate } from "./remote/user";
-import { PageType } from "./types/Menu";
 import Sections from "./components/Sections/Sections";
+
+import { User, defaultUser } from "./types/User";
+import { PageType } from "./types/Menu";
+import { GroupMembershipType, defaultGroup } from "./types/Group";
+
+import useStorage from "./hooks/useStorage";
+
+import { validate } from "./remote/user";
+import GlobalLoadingContext, {
+  defaultGlobalLoadingContext,
+} from "./utility/GlobalLoadingContext";
 
 function App() {
   const [user, setUser] = useStorage<User>("user", defaultUser, "local");
@@ -30,6 +33,12 @@ function App() {
     (user?.isLoggedIn && user?.isLoggedIn()) ?? false
   );
 
+  const [globalLoading, setGlobalLoading] = useState<boolean>(false); // state for context
+  const value = useMemo(
+    () => ({ globalLoading, setGlobalLoading }),
+    [globalLoading]
+  ); // sets the default loading context value (esp setLoading)
+
   useEffect(() => {
     setLoggedIn((user?.isLoggedIn && user?.isLoggedIn()) ?? false);
   }, [user]);
@@ -38,10 +47,9 @@ function App() {
     const query = Object.fromEntries(new URLSearchParams(location.search));
 
     if (query.code && query.user_id) {
+      // validate user
       validateUser(parseInt(query.user_id), query.code);
     }
-
-    console.log(query);
   }, []);
 
   const validateUser = async (
@@ -60,7 +68,17 @@ function App() {
   };
 
   return (
-    <>
+    <GlobalLoadingContext.Provider value={value}>
+      <div
+        className={
+          value.globalLoading
+            ? "global-loading gl-active"
+            : "global-loading gl-stopped"
+        }
+      >
+        Loading...
+      </div>
+
       <header className="App-header">
         <Logo />
 
@@ -79,7 +97,7 @@ function App() {
       </main>
       <RegistrationForm />
       <footer></footer>
-    </>
+    </GlobalLoadingContext.Provider>
   );
 }
 

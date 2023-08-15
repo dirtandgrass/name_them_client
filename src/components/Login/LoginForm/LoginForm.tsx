@@ -1,13 +1,18 @@
 import "./LoginForm.css";
 import localFetch, { HttpMethod } from "../../../utility/LocalFetch";
 import { User, defaultUser } from "../../../types/User";
+import { useContext } from "react";
+import GlobalLoadingContext from "../../../utility/GlobalLoadingContext";
 
 function LoginForm({
   setUser,
 }: {
   setUser: React.Dispatch<React.SetStateAction<User>>;
 }) {
+  const { setGlobalLoading } = useContext(GlobalLoadingContext);
+
   async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
+    setGlobalLoading(true);
     e.preventDefault();
     const formEl = e.target as HTMLFormElement;
     const data = Object.fromEntries(new FormData(formEl).entries()) as {
@@ -44,6 +49,8 @@ function LoginForm({
     } else {
       logOut();
     }
+
+    setGlobalLoading(false);
   }
 
   function logOut() {

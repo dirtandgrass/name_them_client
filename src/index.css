@@ -2,6 +2,7 @@
 
 
   --background-color: hsl(122, 100%, 87%);
+  --backgroud-color-semi-transparent: hsl(122, 100%, 87%, 0.6);
 
   --message-border: black solid 6px;
 
