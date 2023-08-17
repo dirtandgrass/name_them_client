@@ -3,6 +3,7 @@ import { GroupMembershipType } from "../../../types/Group";
 import { User } from "../../../types/User";
 import { topRated } from "../../../remote/rating";
 import { Sex, ratingMessage, ratingRecord } from "../../../types/Api";
+import Spinner from "../../Spinner/Spinner";
 
 function Results({
   user,
@@ -60,25 +61,37 @@ function Results({
     boys.success && boys.data ? (
       boys.data.map(dataMapper)
     ) : (
-      <div>Boy Data not loaded</div>
+      <>
+        <Spinner />
+        <div>Boy Data not loaded</div>
+      </>
     );
   const girlsClause =
     girls.success && girls.data ? (
       girls.data.map(dataMapper)
     ) : (
-      <div>Girl Data not loaded</div>
+      <>
+        <Spinner />
+        <div>Girl Data not loaded</div>
+      </>
     );
   const unisexClause =
     unisex.success && unisex.data ? (
       unisex.data.map(dataMapper)
     ) : (
-      <div>Unisex Data not loaded</div>
+      <>
+        <Spinner />
+        <div>Unisex Data not loaded</div>
+      </>
     );
   const allClause =
     all.success && all.data ? (
       all.data.map(dataMapper)
     ) : (
-      <div>Summary Data not loaded</div>
+      <>
+        <Spinner />
+        <div>Summary Data not loaded</div>
+      </>
     );
 
   return (

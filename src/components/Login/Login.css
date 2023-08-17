@@ -5,15 +5,30 @@
   align-items: center;
   min-height: 4dvh;
   gap: 1dvw;
+
+  >div>p {
+    margin: 0;
+  }
 }
 
 @media (max-width: 520px) {
+
+
+
   .login, .login>div, .login form {
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
     gap: 3px;
-    padding: 8px 0;
+    padding: 1px 0;
+
+    >div>p {
+      display:none
+    }
+  }
+
+  .group-info>div {
+    display: none;
   }
 }
 
