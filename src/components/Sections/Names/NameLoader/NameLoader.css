@@ -1,0 +1,19 @@
+.loading {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 30vh;
+  width: 100vw;
+  background-color: var(--background-color);
+  opacity: 0.9;
+  transition: opacity 0.5s ease-in-out;
+  position: absolute;
+}
+
+
+
+.settled {
+  opacity: 0;
+  pointer-events: none;
+}

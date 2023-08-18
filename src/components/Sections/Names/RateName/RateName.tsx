@@ -5,8 +5,11 @@ import { User } from "../../../../types/User";
 
 import "./RateName.css";
 import NameSource from "../NameSource/NameSource";
-import { fetchName, rateName } from "../../../../remote/name";
+import { fetchUnratedNames, rateName } from "../../../../remote/name";
 import { GroupMembershipType } from "../../../../types/Group";
+
+import { setLoading as setNameLoading } from "../NameLoader/NameLoader";
+import Queue from "../../../../utility/queue";
 
 export enum NameRating {
   No = 0,
@@ -15,40 +18,37 @@ export enum NameRating {
   Love = 1,
 }
 
-function RateName({
-  user,
-  group,
-}: {
-  user: User;
-  group: GroupMembershipType | undefined;
-}) {
-  const [loading, setLoading] = useState<boolean>(true);
+function RateName({ user, group }: { user: User; group: GroupMembershipType }) {
   const [name, setName] = useState<NameType>();
+  const [namesQueue] = useState<Queue<NameType>>(
+    new Queue(async () => {
+      return await fetchUnratedNames(group.group_id, user, 10);
+    }, 3)
+  );
 
   const next = async () => {
-    if (group?.group_id === undefined || user?.user_id === undefined) return;
-    setLoading(true);
-    setName((await fetchName(group.group_id, user)) ?? undefined);
-    setLoading(false); // Set loading state to false once the fetch is done
+    setNameLoading(true);
+    setName(await namesQueue.dequeue());
+    setNameLoading(false); // Set loading state to false once the fetch is done
   };
 
-  const rate = async (rating: NameRating) => {
+  const rate = (rating: NameRating) => {
     if (
       group?.group_id === undefined ||
       user?.user_id === undefined ||
       name === undefined
     )
       return;
-    setLoading(true);
-    const result = await rateName(group.group_id, name.name_id, rating, user);
-
-    console.log(result);
-    if (result.success) {
-      next();
-    } else {
-      console.error(result.message);
-    }
-    //setLoading(false);
+    setNameLoading(true);
+    const result = rateName(group.group_id, name.name_id, rating, user).then(
+      (msg) => {
+        if (!msg.success) {
+          //TODO : show error to user
+          console.error(msg.message);
+        }
+      }
+    );
+    next();
   };
 
   useEffect(() => {
@@ -63,12 +63,10 @@ function RateName({
     class: "rate-name",
     genderText: "",
   };
-  if (loading) {
-    return <div className="loading">Grabbing another name...</div>;
-  }
 
   if (!name) {
-    return <div>No names to rate</div>;
+    setNameLoading(true);
+    return <></>;
   }
 
   if (name.female && name.male) {
@@ -83,33 +81,35 @@ function RateName({
   }
 
   return (
-    <div className={displaySettings.class}>
-      <div className="name-card">
-        <div className="name">{name.name}</div>
-        <div>
+    <>
+      <div className={displaySettings.class}>
+        <div className="name-card">
+          <div className="name">{name.name}</div>
           <div>
-            <strong>Sex</strong> <em>{displaySettings.genderText}</em>
-          </div>
-          <div>
-            <strong>Sources</strong>
-            <NameSource name={name} />
+            <div>
+              <strong>Sex</strong> <em>{displaySettings.genderText}</em>
+            </div>
+            <div>
+              <strong>Sources</strong>
+              <NameSource name={name} />
+            </div>
           </div>
         </div>
+        <div className="name-controls">
+          <button onClick={() => rate(NameRating.No)}>No</button>
+          <button onClick={() => rate(NameRating.Ugh)}>Ugh</button>
+          <button
+            onClick={() => {
+              next();
+            }}
+          >
+            Skip
+          </button>
+          <button onClick={() => rate(NameRating.Like)}>Like</button>
+          <button onClick={() => rate(NameRating.Love)}>Love</button>
+        </div>
       </div>
-      <div className="name-controls">
-        <button onClick={() => rate(NameRating.No)}>No</button>
-        <button onClick={() => rate(NameRating.Ugh)}>Ugh</button>
-        <button
-          onClick={() => {
-            next();
-          }}
-        >
-          Skip
-        </button>
-        <button onClick={() => rate(NameRating.Like)}>Like</button>
-        <button onClick={() => rate(NameRating.Love)}>Love</button>
-      </div>
-    </div>
+    </>
   );
 }
 

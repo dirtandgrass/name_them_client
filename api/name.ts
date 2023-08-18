@@ -6,7 +6,7 @@ import { VercelRequest, VercelResponse } from '@vercel/node';
 
 
 let parseSourceandSex = (req: VercelRequest): NameParams => {
-  const queryParams: NameParams = {};
+  const queryParams: NameParams = { source_ids: -1 };
 
   if (AuthUser) {
     if (req.query?.count) { // querystring specified count
@@ -26,10 +26,11 @@ let parseSourceandSex = (req: VercelRequest): NameParams => {
         req.query.source_ids = req.query.source_ids.split(',');
       }
 
+
       if (Array.isArray(req.query.source_ids)) {
-        queryParams.source_ids = req.query.source_ids.map((id) => parseInt(id.toString()) || 1);
+        queryParams.source_ids = req.query.source_ids.map((id) => parseInt(id.toString()) || -1);
       } else {
-        queryParams.source_ids = parseInt(req.query.source_ids.toString()) || 1;
+        queryParams.source_ids = parseInt(req.query.source_ids.toString()) || -1;
       }
     }
   } else {
@@ -67,12 +68,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         if (!req.query.group_id) { res.json({ message: "no group_id specified", success: false }); return; }
         const group_id = parseInt(req.query.group_id?.toString());
 
+
         const { isMember } = await Group.isMember(group_id);
 
         if (!isMember) { res.json({ message: "not a member of this group", success: false }); return; }
 
-        const { sex, source_ids } = parseSourceandSex(req);
-        const result = await Name.getRandomUnratedName(AuthUser.user_id, group_id, sex, source_ids);
+        const { sex, source_ids, count } = parseSourceandSex(req);
+        //console.log("unrated", source_ids)
+        const result = await Name.getRandomUnratedName({
+          user_id: AuthUser.user_id,
+          group_id,
+          sex,
+          source_ids,
+          count
+        });
         res.json(result);
         return;
       }

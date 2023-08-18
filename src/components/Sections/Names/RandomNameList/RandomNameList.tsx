@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import localFetch from "../../../../utility/LocalFetch";
 import { User } from "../../../../types/User";
 import "./RandomNameList.css";
+import { setLoading as setNameLoading } from "../NameLoader/NameLoader";
 
 export type NameType = {
   name_id: number;
@@ -19,13 +20,12 @@ type NameResult = {
 function RandomNameList({ user }: { user: User | undefined | null }) {
   const [data, setData] = useState<NameResult>();
 
-  const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<{ message: string; name: string } | null>(
     null
   );
 
   useEffect(() => {
-    setLoading(true);
+    setNameLoading(true);
     // Function to fetch data from the API
     const fetchData = async () => {
       try {
@@ -44,17 +44,12 @@ function RandomNameList({ user }: { user: User | undefined | null }) {
         };
         setError({ message: tError.message, name: tError.name }); // Set error state if something goes wrong
       } finally {
-        setLoading(false); // Set loading state to false once the fetch is done
+        setNameLoading(false); // Set loading state to false once the fetch is done
       }
     };
 
     fetchData(); // Call the fetch function when the component mounts
   }, [user]);
-
-  // Display the appropriate content based on loading and error states
-  if (loading) {
-    return <div>Loading...</div>;
-  }
 
   if (error) {
     return <div>Error: {error.message}</div>;

@@ -7,7 +7,7 @@ export enum Sex {
   male = "male", female = "female", unisex = "unisex", all = "all"
 }
 
-export type NameParams = { count?: number, source_ids?: number | Array<number>, sex?: Sex }
+export type NameParams = { count?: number, source_ids: number | Array<number>, sex?: Sex }
 
 
 
@@ -62,21 +62,22 @@ export default class Name {
 
 
 
-  static async getRandomUnratedName(user_id: number, group_id: number, sex = Sex.all, source_ids: number | number[] = -1)
-    : Promise<{ source_id?: number | Array<number>, sex?: string, data: Record<string, unknown> }> {
-
+  static async getRandomUnratedName({ user_id, group_id, sex = Sex.all, source_ids = 1, count = 1 }: { user_id: number, group_id: number, sex: Sex | undefined, source_ids: number | number[] | undefined, count: number | undefined })
+    : Promise<{ source_id?: number | Array<number>, sex?: string, data: Record<string, unknown>[] }> {
     const [source_clause, sex_clause] = this.getFilterClausesForRaw(sex, source_ids);
+
+    count = Math.min(Math.max(Math.round(count), 1), 10)
 
     let in_clause_prefix = "and"
     if (source_clause.length === 0 && sex_clause.length === 0) {
       in_clause_prefix = "where";
     }
-    const query = `select n.name_id, n.name, n.male, n.female from source_name sn join name n on n.name_id=sn.name_id ${source_clause} ${sex_clause} ${in_clause_prefix} n.name_id not in (select r.name_id from rating r where r.user_id=${user_id} and r.group_id=${group_id}) order by random() limit 1`;
+    const query = `select n.name_id, n.name, n.male, n.female from source_name sn join name n on n.name_id=sn.name_id ${source_clause} ${sex_clause} ${in_clause_prefix} n.name_id not in (select r.name_id from rating r where r.user_id=${user_id} and r.group_id=${group_id}) order by random() limit ${count}`;
 
     // console.log(query);
-    const data = (await prisma.$queryRawUnsafe(query) as Record<string, unknown>[])[0];
+    const data = (await prisma.$queryRawUnsafe(query) as Record<string, unknown>[]);
 
-    const resultObj = { message: "found record", source_ids, sex: Sex[sex], data, success: true }
+    const resultObj = { message: "found records", source_ids, sex: Sex[sex], data, success: true }
 
     return resultObj
   }
