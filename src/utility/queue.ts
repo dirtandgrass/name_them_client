@@ -5,10 +5,12 @@ export default class Queue<T> {
   private storage: T[] = [];
   private reload: () => Promise<T[] | undefined>;
   private low: number;
+  private isReloading: boolean;
 
   constructor(reload: () => Promise<T[] | undefined>, low: number = 2, private capacity: number = Infinity) {
     this.reload = reload
     this.low = low;
+    this.isReloading = false;
   }
 
   enqueue(item: T): boolean {
@@ -24,16 +26,19 @@ export default class Queue<T> {
 
     // queue empty
     if (this.count() <= 0) {
+
       const newData = await this.reload();
       if (!newData || newData.length === 0) {
         return undefined;
       }
       newData.forEach(item => { this.enqueue(item) })
-    } else if (this.count() <= this.low) {
+    } else if (this.count() <= this.low && !this.isReloading) {
       // queue low
+      this.isReloading = true;
       this.reload().then((v) => {
         if (v) {
           v.forEach(item => this.enqueue(item))
+          this.isReloading = false;
         }
       });
     }
