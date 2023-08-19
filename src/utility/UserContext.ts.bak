@@ -1,12 +1,17 @@
-// import React from "react";
-// import { User, defaultUser } from "../types/User";
+import React from "react";
+import { User, defaultUser } from "../types/User";
 
-// export type UserContextType = {
-//   user: User;
-//   setUser: ((user: User) => void);
-// }
 
-// export const defaultUserContext: UserContextType = { user: defaultUser, setUser: function (user: User) { } };
+export type UserContextType = {
+  user: User;
+  setUser: any;
+}
 
-// const UserContext = React.createContext<UserContextType>(defaultUserContext);
-// export default UserContext;
+
+//const [UserContextType, setUserContextType] = React.useState<boolean>(false);
+
+
+export const defaultContextUser: UserContextType = { user: defaultUser, setUser: () => { } };
+
+const UserContext = React.createContext<UserContextType>(defaultContextUser);
+export default UserContext;

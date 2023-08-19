@@ -20,6 +20,8 @@ export enum NameRating {
 
 function RateName({ user, group }: { user: User; group: GroupMembershipType }) {
   const [name, setName] = useState<NameType>();
+
+  // TODO: make this a global queue, so can avoid reloading names unless group or user changess
   const [namesQueue] = useState<Queue<NameType>>(
     new Queue(async () => {
       return await fetchUnratedNames(group.group_id, user, 10);
@@ -27,6 +29,7 @@ function RateName({ user, group }: { user: User; group: GroupMembershipType }) {
   );
 
   const next = async () => {
+    //console.log("next");
     setNameLoading(true);
     setName(await namesQueue.dequeue());
     setNameLoading(false); // Set loading state to false once the fetch is done
@@ -56,16 +59,12 @@ function RateName({ user, group }: { user: User; group: GroupMembershipType }) {
     next(); // Call the fetch function when the component mounts
   }, []);
 
-  if (!user) {
-    return <></>;
-  }
   const displaySettings = {
     class: "rate-name",
     genderText: "",
   };
 
   if (!name) {
-    setNameLoading(true);
     return <></>;
   }
 

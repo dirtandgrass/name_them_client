@@ -15,9 +15,8 @@ import { GroupMembershipType, defaultGroup } from "./types/Group";
 import useStorage from "./hooks/useStorage";
 
 import { validate } from "./remote/user";
-import GlobalLoadingContext, {
-  defaultGlobalLoadingContext,
-} from "./utility/GlobalLoadingContext";
+import GlobalLoadingContext from "./utility/GlobalLoadingContext";
+//import UserContext from "./utility/UserContext";
 
 function App() {
   const [user, setUser] = useStorage<User>("user", defaultUser, "local");
@@ -26,15 +25,14 @@ function App() {
     defaultGroup,
     "local"
   );
-
   const [page, setPage] = useStorage<PageType>("page", PageType.names, "local");
 
   const [loggedIn, setLoggedIn] = useState<boolean>(
     (user?.isLoggedIn && user?.isLoggedIn()) ?? false
   );
 
-  const [globalLoading, setGlobalLoading] = useState<boolean>(false); // state for context
-  const value = useMemo(
+  const [globalLoading, setGlobalLoading] = useState<boolean>(false); // state for glocal loading context
+  const loadingValue = useMemo(
     () => ({ globalLoading, setGlobalLoading }),
     [globalLoading]
   ); // sets the default loading context value (esp setLoading)
@@ -68,10 +66,10 @@ function App() {
   };
 
   return (
-    <GlobalLoadingContext.Provider value={value}>
+    <GlobalLoadingContext.Provider value={loadingValue}>
       <div
         className={
-          value.globalLoading
+          loadingValue.globalLoading
             ? "global-loading gl-active"
             : "global-loading gl-stopped"
         }
@@ -83,7 +81,12 @@ function App() {
         <Logo />
 
         <div className="login">
-          <Login user={user} setUser={setUser} setPage={setPage} />
+          <Login
+            user={user}
+            setUser={setUser}
+            setPage={setPage}
+            setGroup={setGroup}
+          />
           {loggedIn ? (
             <GroupInfo user={user} group={group} setGroup={setGroup} />
           ) : (

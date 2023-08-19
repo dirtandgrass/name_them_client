@@ -4,15 +4,18 @@ import "./Login.css";
 import { useEffect } from "react";
 import LoginForm from "./LoginForm/LoginForm";
 import { PageType } from "../../types/Menu";
+import { GroupMembershipType, defaultGroup } from "../../types/Group";
 
 function Login({
   user,
   setUser,
   setPage,
+  setGroup,
 }: {
-  user: User | undefined;
+  user: User;
   setUser: React.Dispatch<React.SetStateAction<User>>;
   setPage: React.Dispatch<React.SetStateAction<PageType>>;
+  setGroup: React.Dispatch<React.SetStateAction<GroupMembershipType>>;
 }) {
   useEffect(() => {
     if (!user) {
@@ -40,6 +43,7 @@ function Login({
 
   function logOut() {
     setUser(defaultUser);
+    setGroup(defaultGroup);
     setPage(PageType.names);
   }
 

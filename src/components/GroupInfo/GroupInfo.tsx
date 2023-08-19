@@ -8,8 +8,8 @@ export default function GroupInfo({
   group,
   setGroup,
 }: {
-  user: User | undefined;
-  group: GroupMembershipType | undefined;
+  user: User;
+  group: GroupMembershipType;
   setGroup: React.Dispatch<React.SetStateAction<GroupMembershipType>>;
 }) {
   const [groups, setGroups] = useState<GroupMembershipType[]>([]);

@@ -38,4 +38,4 @@ export class User {
 }
 
 
-export const defaultUser = new User(0, "guest", "n/a");
+export const defaultUser = new User(-1, "guest", "n/a");

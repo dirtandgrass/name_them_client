@@ -13,7 +13,7 @@ function Sections({
 }: {
   page: PageType;
   user: User;
-  group: GroupMembershipType | undefined;
+  group: GroupMembershipType;
   loggedIn: boolean;
 }) {
   let sectionContent = <></>;

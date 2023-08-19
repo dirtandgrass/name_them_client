@@ -5,4 +5,4 @@ export type GroupMembershipType = {
   name: string;
 };
 
-export const defaultGroup: GroupMembershipType = { group_id: -1, role: "", description: "", name: "" };
+export const defaultGroup: GroupMembershipType = { "group_id": 1, "role": "participant", "name": "Global Group", "description": "A public village to test out the app" };
