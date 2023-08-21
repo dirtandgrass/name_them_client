@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import Spinner from "../../../Spinner/Spinner";
 import "./NameLoader.css";
 function NameLoader() {

@@ -4,19 +4,19 @@ import localFetch, { HttpMethod } from "../utility/LocalFetch";
 import * as apiTypes from "../types/Api";
 import { NameType } from "../components/Sections/Names/RandomNameList/RandomNameList";
 
-export const fetchUnratedNames = async (group_id: number, user: User, count: number = 1): Promise<NameType[] | undefined> => {
+export const fetchUnratedNames = async (group_id: number, user: User, count: number = 1): Promise<NameType[]> => {
   try {
     const response: any = await localFetch({
       path: `name/?action=unrated&group_id=${group_id}&count=${count}`,
       user: user,
     });
 
-    const data = (response.data as NameType[]) || undefined;
+    const data = (response.data as NameType[]);
     //console.log(data);
     return (data); // Return data if successful
   } catch (error: unknown) {
     console.error(error);
-    return undefined;
+    return [];
   }
 };
 

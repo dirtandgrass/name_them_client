@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { NameType } from "../RandomNameList/RandomNameList";
 import { User } from "../../../../types/User";
@@ -9,7 +9,7 @@ import { fetchUnratedNames, rateName } from "../../../../remote/name";
 import { GroupMembershipType } from "../../../../types/Group";
 
 import { setLoading as setNameLoading } from "../NameLoader/NameLoader";
-import Queue from "../../../../utility/queue";
+import AwaitedBuffer from "../../../../utility/AwaitedBuffer";
 
 export enum NameRating {
   No = 0,
@@ -22,10 +22,10 @@ function RateName({ user, group }: { user: User; group: GroupMembershipType }) {
   const [name, setName] = useState<NameType>();
 
   // TODO: make this a global queue, so can avoid reloading names unless group or user changess
-  const [namesQueue] = useState<Queue<NameType>>(
-    new Queue(async () => {
-      return await fetchUnratedNames(group.group_id, user, 10);
-    }, 3)
+  const [namesQueue] = useState<AwaitedBuffer<NameType>>(
+    new AwaitedBuffer(async () => {
+      return await fetchUnratedNames(group.group_id, user, 18);
+    }, 9)
   );
 
   const next = async () => {
@@ -81,6 +81,18 @@ function RateName({ user, group }: { user: User; group: GroupMembershipType }) {
 
   return (
     <>
+      <div className="rate-settings">
+        <div className="rate-settings">Rate Names</div>
+        Names for:
+        <input type="checkbox" />
+        Boy
+        <input type="checkbox" />
+        Girl
+        <input type="checkbox" />
+        Unisex
+        <input type="checkbox" />
+        All
+      </div>
       <div className={displaySettings.class}>
         <div className="name-card">
           <div className="name">{name.name}</div>
