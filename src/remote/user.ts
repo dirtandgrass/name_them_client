@@ -21,3 +21,18 @@ export const validate = async (user_id: number, code: string): Promise<message> 
     return { message: "Error", success: false };
   }
 };
+
+export const register = async (
+  username: string, email: string, password: string): Promise<{ message: string; success: boolean; user?: User; }> => {
+  const data = { username, email, password };
+  return await localFetch({
+    path: "user/?action=register",
+    method: HttpMethod.POST,
+    data,
+  }) as {
+    message: string;
+    success: boolean;
+    user?: User;
+  };
+
+}

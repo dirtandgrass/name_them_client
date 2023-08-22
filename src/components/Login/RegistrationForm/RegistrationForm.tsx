@@ -1,6 +1,5 @@
 import "./RegistrationForm.css";
-import localFetch, { HttpMethod } from "../../../utility/LocalFetch";
-import { User } from "../../../types/User";
+import { register } from "../../../remote/user";
 
 function RegistrationForm() {
   function closeDialog() {
@@ -19,15 +18,7 @@ function RegistrationForm() {
       password: string;
     };
 
-    const result = (await localFetch({
-      path: "user/?action=register",
-      method: HttpMethod.POST,
-      data,
-    })) as {
-      message: string;
-      success: boolean;
-      user?: User;
-    };
+    const result = await register(data.username, data.email, data.password);
 
     if (result.success) {
       closeDialog();

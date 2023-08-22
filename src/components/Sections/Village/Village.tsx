@@ -5,6 +5,19 @@ function Village({ user, group }: { user: User; group: GroupMembershipType }) {
   if (group.role === "admin") {
   }
 
+  let createForm = document.getElementById(
+    "create-group-form"
+  ) as HTMLDialogElement;
+
+  function showCreate() {
+    if (!createForm) {
+      createForm = document.getElementById(
+        "create-group-form"
+      ) as HTMLDialogElement;
+    }
+    createForm?.showModal();
+  }
+
   return (
     <section className="village-section">
       <ul>
@@ -16,13 +29,15 @@ function Village({ user, group }: { user: User; group: GroupMembershipType }) {
         </li>
       </ul>
       <div className="selected">
-        <h2>Selected Village:</h2>
-        <div>{group.name}</div>
+        <h2>
+          Selected Village: <span>{group.name}</span>
+        </h2>
+
         <div>{group.description}</div>
         <div>{group.role}</div>
       </div>
       <div>
-        <button>Create Village</button>
+        <button onClick={showCreate}>Create Village</button>
       </div>
     </section>
   );

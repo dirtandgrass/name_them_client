@@ -16,6 +16,7 @@ import useStorage from "./hooks/useStorage";
 
 import { validate } from "./remote/user";
 import GlobalLoadingContext from "./utility/GlobalLoadingContext";
+import CreateGroup from "./components/DialogForms/CreateGroup";
 //import UserContext from "./utility/UserContext";
 
 function App() {
@@ -99,7 +100,7 @@ function App() {
         <main>
           <Sections page={page} user={user} group={group} loggedIn={loggedIn} />
         </main>
-        <RegistrationForm />
+        {loggedIn ? <CreateGroup /> : <RegistrationForm />}
         <footer></footer>
       </GlobalLoadingContext.Provider>
     </span>
