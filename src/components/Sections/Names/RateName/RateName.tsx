@@ -10,6 +10,8 @@ import { GroupMembershipType } from "../../../../types/Group";
 
 import { setLoading as setNameLoading } from "../NameLoader/NameLoader";
 import AwaitedBuffer from "../../../../utility/AwaitedBuffer";
+import { Sex } from "../../../../types/Api";
+import useStorage from "../../../../hooks/useStorage";
 
 export enum NameRating {
   No = 0,
@@ -21,12 +23,24 @@ export enum NameRating {
 function RateName({ user, group }: { user: User; group: GroupMembershipType }) {
   const [name, setName] = useState<NameType>();
 
+  const [genders, setGenders] = useStorage(
+    "genders" + group.group_id,
+    Sex.all,
+    "local"
+  );
+
   // TODO: make this a global queue, so can avoid reloading names unless group or user changess
-  const [namesQueue] = useState<AwaitedBuffer<NameType>>(
+  const [namesQueue, setNamesQueue] = useState<AwaitedBuffer<NameType>>(
     new AwaitedBuffer(async () => {
       return await fetchUnratedNames(group.group_id, user, 18);
     }, 9)
   );
+
+  useEffect(() => {
+    namesQueue.setReload(async () => {
+      return await fetchUnratedNames(group.group_id, user, 18, genders);
+    });
+  }, [genders]);
 
   const next = async () => {
     //console.log("next");
@@ -82,16 +96,50 @@ function RateName({ user, group }: { user: User; group: GroupMembershipType }) {
   return (
     <>
       <div className="rate-settings">
-        <div className="rate-settings">Rate Names</div>
-        Names for:
-        <input type="checkbox" />
-        Boy
-        <input type="checkbox" />
-        Girl
-        <input type="checkbox" />
-        Unisex
-        <input type="checkbox" />
-        All
+        <label htmlFor="names-for-display">Genders ⬇️</label>
+        <input type="checkbox" id="names-for-display" />
+        <ul id="names-for-sex">
+          <li>
+            <input
+              type="radio"
+              checked={genders === Sex.male}
+              onClick={() => {
+                setGenders(Sex.male);
+              }}
+            />
+            Boy
+          </li>
+          <li>
+            <input
+              type="radio"
+              checked={genders === Sex.female}
+              onClick={() => {
+                setGenders(Sex.female);
+              }}
+            />
+            Girl
+          </li>
+          <li>
+            <input
+              type="radio"
+              checked={genders === Sex.unisex}
+              onClick={() => {
+                setGenders(Sex.unisex);
+              }}
+            />
+            Unisex
+          </li>
+          <li>
+            <input
+              type="radio"
+              checked={genders === Sex.all}
+              onClick={() => {
+                setGenders(Sex.all);
+              }}
+            />
+            All
+          </li>
+        </ul>
       </div>
       <div className={displaySettings.class}>
         <div className="name-card">

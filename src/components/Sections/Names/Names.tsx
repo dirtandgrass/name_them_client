@@ -15,13 +15,14 @@ function Names({
 }) {
   return (
     <>
-      <NameLoader />
       {loggedIn && group?.group_id && group.group_id > 0 ? (
         <div id="rate-name">
+          <NameLoader />
           <RateName user={user} group={group} />
         </div>
       ) : (
         <>
+          <NameLoader />
           <RandomNameList user={user} />
         </>
       )}

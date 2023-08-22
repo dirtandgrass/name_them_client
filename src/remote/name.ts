@@ -3,11 +3,12 @@ import { User } from "../types/User";
 import localFetch, { HttpMethod } from "../utility/LocalFetch";
 import * as apiTypes from "../types/Api";
 import { NameType } from "../components/Sections/Names/RandomNameList/RandomNameList";
+import { Sex } from "../types/Api";
 
-export const fetchUnratedNames = async (group_id: number, user: User, count: number = 1): Promise<NameType[]> => {
+export const fetchUnratedNames = async (group_id: number, user: User, count: number = 1, sex: Sex = Sex.all, source_ids: number | number[] = -1): Promise<NameType[]> => {
   try {
     const response: any = await localFetch({
-      path: `name/?action=unrated&group_id=${group_id}&count=${count}`,
+      path: `name/?action=unrated&group_id=${group_id}&count=${count}&sex=${sex}&source_ids=${source_ids}`,
       user: user,
     });
 

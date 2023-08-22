@@ -13,10 +13,14 @@ let parseSourceandSex = (req: VercelRequest): NameParams => {
       queryParams.count = parseInt(req.query.count.toString()) || 5;
     }
 
-    if (req.query?.sex) { // querystring specified count
+    if (req.query?.sex) { // querystring specified sex
       const qs = req.query.sex.toString();
+
+
+
+
       //console.log("QS:", qs);
-      queryParams.sex = qs as Sex || undefined;
+      queryParams.sex = qs as Sex ?? Sex.all;
     }
 
     if (req.query?.source_ids) { // querystring specified source_ids

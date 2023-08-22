@@ -66,6 +66,7 @@ export default class Name {
     : Promise<{ source_id?: number | Array<number>, sex?: string, data: Record<string, unknown>[] }> {
     const [source_clause, sex_clause] = this.getFilterClausesForRaw(sex, source_ids);
 
+    //console.log("source_clause", source_clause, source_ids);
     count = Math.min(Math.max(Math.round(count), 1), 10)
 
     let in_clause_prefix = "and"

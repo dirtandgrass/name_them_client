@@ -36,7 +36,7 @@ function NameSource({ name }: { name: NameType }) {
   useEffect(() => {
     // Function to fetch data from the API
     fetchSources(); // Call the fetch function when the component mounts
-  }, []);
+  }, [, name]);
 
   if (loading) {
     return <div className="name-source">Loading...</div>;

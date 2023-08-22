@@ -20,6 +20,41 @@
   }
 }
 
+#names-for-display {
+  display: none;
+
+
+}
+
+.rate-settings>label {
+  user-select: none;  cursor: pointer;
+}
+
+
+#names-for-sex {
+  display: none;
+  position: absolute;
+  background-color: var(--backgroud-color-semi-transparent);
+  backdrop-filter: blur(2px);
+  margin: 0;
+  padding: 0;
+  margin-left: 5px;
+
+}
+
+#names-for-sex>li {
+  list-style: none;
+  margin: 0;
+  padding: max(calc(125px - 12dvh),0.8dvh) max(calc(50px - 10dvw),0.7dvw);
+}
+
+input:checked + #names-for-sex  {
+  display: block;
+
+
+}
+
+
 .name-card {
   display: grid;
   grid-template-columns: 2fr 2fr;
