@@ -66,41 +66,43 @@ function App() {
   };
 
   return (
-    <GlobalLoadingContext.Provider value={loadingValue}>
-      <div
-        className={
-          loadingValue.globalLoading
-            ? "global-loading gl-active"
-            : "global-loading gl-stopped"
-        }
-      >
-        Loading...
-      </div>
-
-      <header className="App-header">
-        <Logo />
-
-        <div className="login">
-          <Login
-            user={user}
-            setUser={setUser}
-            setPage={setPage}
-            setGroup={setGroup}
-          />
-          {loggedIn ? (
-            <GroupInfo user={user} group={group} setGroup={setGroup} />
-          ) : (
-            <></>
-          )}
+    <span className={loggedIn ? "logged-in" : "logged-out"}>
+      <GlobalLoadingContext.Provider value={loadingValue}>
+        <div
+          className={
+            loadingValue.globalLoading
+              ? "global-loading gl-active"
+              : "global-loading gl-stopped"
+          }
+        >
+          Loading...
         </div>
-        <Menu setPage={setPage} page={page} user={user} />
-      </header>
-      <main>
-        <Sections page={page} user={user} group={group} loggedIn={loggedIn} />
-      </main>
-      <RegistrationForm />
-      <footer></footer>
-    </GlobalLoadingContext.Provider>
+
+        <header className="App-header">
+          <Logo />
+
+          <div className="login">
+            <Login
+              user={user}
+              setUser={setUser}
+              setPage={setPage}
+              setGroup={setGroup}
+            />
+            {loggedIn ? (
+              <GroupInfo user={user} group={group} setGroup={setGroup} />
+            ) : (
+              <></>
+            )}
+          </div>
+          <Menu setPage={setPage} page={page} user={user} />
+        </header>
+        <main>
+          <Sections page={page} user={user} group={group} loggedIn={loggedIn} />
+        </main>
+        <RegistrationForm />
+        <footer></footer>
+      </GlobalLoadingContext.Provider>
+    </span>
   );
 }
 
