@@ -10,7 +10,7 @@ function CreateGroup() {
 
   return (
     <dialog id="create-group-form">
-      <h2>Create Group</h2>
+      <h2>Create Village</h2>
       <form>
         <div className="form_input"></div>
         <div className="form_input">

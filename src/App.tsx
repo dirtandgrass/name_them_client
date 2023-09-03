@@ -21,7 +21,7 @@ import CreateGroup from "./components/DialogForms/CreateGroup";
 
 function App() {
   const [user, setUser] = useStorage<User>("user", defaultUser, "local");
-  const [group, setGroup] = useStorage<GroupMembershipType>(
+  const [group, setGroup] = useStorage<GroupMembershipType | null>(
     "group",
     defaultGroup,
     "local"
@@ -89,7 +89,7 @@ function App() {
               setPage={setPage}
               setGroup={setGroup}
             />
-            {loggedIn ? (
+            {loggedIn && group ? (
               <GroupInfo user={user} group={group} setGroup={setGroup} />
             ) : (
               <></>

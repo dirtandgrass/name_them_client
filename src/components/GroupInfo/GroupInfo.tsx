@@ -10,7 +10,7 @@ export default function GroupInfo({
 }: {
   user: User;
   group: GroupMembershipType;
-  setGroup: React.Dispatch<React.SetStateAction<GroupMembershipType>>;
+  setGroup: React.Dispatch<React.SetStateAction<GroupMembershipType | null>>;
 }) {
   const [groups, setGroups] = useState<GroupMembershipType[]>([]);
   const [loading, setLoading] = useState(true);

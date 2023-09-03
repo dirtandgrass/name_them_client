@@ -70,12 +70,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       case "register": {
 
         // register a new user
-        if (!req.body.register_email || !req.body.register_password || !req.body.register_username) {
+        if (!req.body.email || !req.body.password || !req.body.username) {
           res.json({ message: "User not created", success: false });
           //console.log(req.body);
           return;
         }
-        const regResult = await User.Register(req.body.register_username, req.body.register_email, req.body.register_password);
+        const regResult = await User.Register(req.body.username, req.body.email, req.body.password);
 
         if (!regResult || !regResult.user) {
           res.json({ message: "User not created: user already exists", success: false });

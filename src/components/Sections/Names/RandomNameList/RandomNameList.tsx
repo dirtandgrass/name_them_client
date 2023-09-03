@@ -17,7 +17,7 @@ type NameResult = {
   length: number;
 };
 
-function RandomNameList({ user }: { user: User | undefined | null }) {
+function RandomNameList() {
   const [data, setData] = useState<NameResult>();
 
   const [error, setError] = useState<{ message: string; name: string } | null>(
@@ -30,8 +30,7 @@ function RandomNameList({ user }: { user: User | undefined | null }) {
     const fetchData = async () => {
       try {
         const response = await localFetch({
-          path: "name/?count=10",
-          user: user || undefined,
+          path: "name/",
         });
 
         const data = response as NameResult;
@@ -49,7 +48,7 @@ function RandomNameList({ user }: { user: User | undefined | null }) {
     };
 
     fetchData(); // Call the fetch function when the component mounts
-  }, [user]);
+  }, []);
 
   if (error) {
     return <div>Error: {error.message}</div>;

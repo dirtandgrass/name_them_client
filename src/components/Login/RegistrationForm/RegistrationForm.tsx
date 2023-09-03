@@ -18,6 +18,8 @@ function RegistrationForm() {
       password: string;
     };
 
+    console.log(data);
+
     const result = await register(data.username, data.email, data.password);
 
     if (result.success) {
@@ -32,7 +34,7 @@ function RegistrationForm() {
       <form onSubmit={handleRegister}>
         <div className="form_input">
           <input
-            name="register_email"
+            name="email"
             type="text"
             autoComplete="email"
             placeholder="email"
@@ -40,18 +42,14 @@ function RegistrationForm() {
         </div>
         <div className="form_input">
           <input
-            name="register_password"
+            name="password"
             autoComplete="new-password"
             type="password"
             placeholder="password"
           />
         </div>
         <div className="form_input">
-          <input
-            name="register_username"
-            type="string"
-            placeholder="username"
-          />
+          <input name="username" type="string" placeholder="username" />
         </div>
         <div className="form_actions">
           <button type="button" onClick={closeDialog}>

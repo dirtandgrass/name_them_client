@@ -13,23 +13,27 @@ function Sections({
 }: {
   page: PageType;
   user: User;
-  group: GroupMembershipType;
+  group: GroupMembershipType | null;
   loggedIn: boolean;
 }) {
   let sectionContent = <></>;
 
-  switch (page) {
-    case PageType.results: {
-      sectionContent = <Results user={user} group={group} />;
-      break;
-    }
-    case PageType.groups: {
-      sectionContent = <Village user={user} group={group} />;
-      break;
-    }
-    default: {
-      sectionContent = <Names user={user} group={group} loggedIn={loggedIn} />;
-      break;
+  if (group) {
+    switch (page) {
+      case PageType.results: {
+        sectionContent = <Results user={user} group={group} />;
+        break;
+      }
+      case PageType.groups: {
+        sectionContent = <Village user={user} group={group} />;
+        break;
+      }
+      default: {
+        sectionContent = (
+          <Names user={user} group={group} loggedIn={loggedIn} />
+        );
+        break;
+      }
     }
   }
 

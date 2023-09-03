@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client'
 import headerauth, { AuthUser } from '../middleware/headerauth';
 import { randomHash } from '../utility/randomHash';
+import { response } from '../types/ApiMessage';
 const prisma = new PrismaClient()
 
 
@@ -10,7 +11,7 @@ export default class Group {
 
 
 
-  static async createGroup(name: string, description: string): Promise<{ message: string, success: boolean, group_id?: number }> {
+  static async createGroup(name: string, description: string): Promise<response & { group_id?: number }> {
 
     const user_id = AuthUser?.user_id || 0;
     if (user_id === 0) return { "message": "not logged in", "success": false };

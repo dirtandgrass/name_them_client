@@ -13,6 +13,8 @@ import AwaitedBuffer from "../../../../utility/AwaitedBuffer";
 import { Sex } from "../../../../types/Api";
 import useStorage from "../../../../hooks/useStorage";
 
+import { GlobalNamesQueue } from "../../../../utility/NamesQueue";
+
 export enum NameRating {
   No = 0,
   Ugh = 0.25,
@@ -29,17 +31,19 @@ function RateName({ user, group }: { user: User; group: GroupMembershipType }) {
     "local"
   );
 
-  // TODO: make this a global queue, so can avoid reloading names unless group or user changess
-  const [namesQueue, setNamesQueue] = useState<AwaitedBuffer<NameType>>(
-    new AwaitedBuffer(async () => {
-      return await fetchUnratedNames(group.group_id, user, 18);
-    }, 9)
-  );
+  if (!GlobalNamesQueue.names) {
+    console.log(GlobalNamesQueue.names);
+    GlobalNamesQueue.names = new AwaitedBuffer(async () => {
+      return await fetchUnratedNames(group.group_id, user, 18, genders);
+    }, 9);
+  }
+  const namesQueue = GlobalNamesQueue.names;
 
   useEffect(() => {
     namesQueue.setReload(async () => {
       return await fetchUnratedNames(group.group_id, user, 18, genders);
     });
+    next();
   }, [genders]);
 
   const next = async () => {
@@ -70,7 +74,10 @@ function RateName({ user, group }: { user: User; group: GroupMembershipType }) {
 
   useEffect(() => {
     // Function to fetch data from the API
-    next(); // Call the fetch function when the component mounts
+    console.log("count", namesQueue.count());
+    if (namesQueue.count() === 0) {
+      next(); // Call the fetch function when the component mounts
+    }
   }, []);
 
   const displaySettings = {
@@ -103,7 +110,7 @@ function RateName({ user, group }: { user: User; group: GroupMembershipType }) {
             <input
               type="radio"
               checked={genders === Sex.male}
-              onClick={() => {
+              onChange={() => {
                 setGenders(Sex.male);
               }}
             />
@@ -113,7 +120,7 @@ function RateName({ user, group }: { user: User; group: GroupMembershipType }) {
             <input
               type="radio"
               checked={genders === Sex.female}
-              onClick={() => {
+              onChange={() => {
                 setGenders(Sex.female);
               }}
             />
@@ -123,7 +130,7 @@ function RateName({ user, group }: { user: User; group: GroupMembershipType }) {
             <input
               type="radio"
               checked={genders === Sex.unisex}
-              onClick={() => {
+              onChange={() => {
                 setGenders(Sex.unisex);
               }}
             />
@@ -133,7 +140,7 @@ function RateName({ user, group }: { user: User; group: GroupMembershipType }) {
             <input
               type="radio"
               checked={genders === Sex.all}
-              onClick={() => {
+              onChange={() => {
                 setGenders(Sex.all);
               }}
             />

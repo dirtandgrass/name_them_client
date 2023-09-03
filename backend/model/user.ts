@@ -2,6 +2,7 @@ import { PrismaClient } from '@prisma/client'
 import bcrypt from 'bcryptjs'
 import { auth_salt } from '../middleware/headerauth';
 import { randomHash } from '../utility/randomHash';
+import { response } from '../types/ApiMessage';
 
 const prisma = new PrismaClient()
 
@@ -29,7 +30,7 @@ export default class User {
   }
 
 
-  static async Register(username: string, email: string, password: string): Promise<{ message: string, user?: UserData, success: boolean, code?: string }> {
+  static async Register(username: string, email: string, password: string): Promise<response & { user?: UserData, code?: string }> {
 
     //console.log("Register", username, email, password);
     const salt = bcrypt.genSaltSync(auth_salt);
@@ -84,7 +85,7 @@ export default class User {
 
   }
 
-  static async EmailPasswordLogin(email: string, password: string): Promise<{ user_id?: number, username?: string, email?: string, message: string, success: boolean }> {
+  static async EmailPasswordLogin(email: string, password: string): Promise<response & { user_id?: number, username?: string, email?: string }> {
 
     const user = await prisma.user.findFirst(
       { where: { email: email } }
@@ -97,7 +98,7 @@ export default class User {
     return { user_id: user.user_id, username: user.username, email: user.email, message: "User logged in", success: true };
   }
 
-  static async SessionLogin(user_id: number, session_id: number, user_hash: string, extend: boolean = false): Promise<{ user_id?: number, username?: string, email?: string, message: string, success: boolean }> {
+  static async SessionLogin(user_id: number, session_id: number, user_hash: string, extend: boolean = false): Promise<response & { user_id?: number, username?: string, email?: string }> {
 
     const session = await prisma.session.findFirst(
       { where: { session_id: session_id, user_id: user_id, expires: { gt: new Date() } } }
@@ -121,7 +122,7 @@ export default class User {
   }
 
 
-  static async GetUser(user_id: number): Promise<{ user_id?: number, username?: string, email?: string, message: string, success: boolean }> {
+  static async GetUser(user_id: number): Promise<response & { user_id?: number, username?: string, email?: string }> {
 
     const user = await prisma.user.findFirst(
       { where: { user_id: user_id } }
@@ -132,7 +133,7 @@ export default class User {
     return { user_id: user.user_id, username: user.username, email: user.email, message: "User found", success: true };
   }
 
-  static async CreateSession(user_id: number): Promise<{ message: string; success: boolean; session?: string, session_id?: number }> {
+  static async CreateSession(user_id: number): Promise<response & { session?: string, session_id?: number }> {
 
     const user_hash = randomHash();
     const hash = bcrypt.hashSync(user_hash, auth_salt);

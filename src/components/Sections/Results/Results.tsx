@@ -5,13 +5,7 @@ import { topRated } from "../../../remote/rating";
 import { Sex, ratingMessage, ratingRecord } from "../../../types/Api";
 import Spinner from "../../Spinner/Spinner";
 
-function Results({
-  user,
-  group,
-}: {
-  user: User;
-  group: GroupMembershipType | undefined;
-}) {
+function Results({ user, group }: { user: User; group: GroupMembershipType }) {
   const [boys, setBoys] = useState<ratingMessage>({
     message: "loading",
     success: false,
