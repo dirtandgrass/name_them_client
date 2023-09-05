@@ -4,6 +4,7 @@
 export default class AwaitedBuffer<T> {
   private storage: T[] = [];
   private promiseLoad: Promise<T> | null = null;
+  private current: T | null = null;
 
   // takes an asynchromous function that returns an array of items type T
   constructor(
@@ -36,6 +37,12 @@ export default class AwaitedBuffer<T> {
     // newData.forEach(item => { this.enqueue(item) })
   }
 
+
+  // for use with reloading ui without advancing queue
+  public getCurrent(): T | null {
+    return this.current;
+  }
+
   // public so can manually add items
   enqueue(item: T): boolean {
     if (this.uniqueVals && this.storage.includes(item)) return false;
@@ -45,6 +52,7 @@ export default class AwaitedBuffer<T> {
 
   // take next item from queue
   async dequeue(): Promise<T> {
+    console.log("prefetching", this.count(), this.low, this.promiseLoad);
     // queue empty
     if (this.count() <= 0) {
       if (this.promiseLoad) { // there's a fetch in progress
@@ -73,6 +81,7 @@ export default class AwaitedBuffer<T> {
 
       // since queue is empty await
       await this.promiseLoad;
+      this.promiseLoad = null; // clear promise
 
     } else if (this.count() <= this.low && !this.promiseLoad) {
       // queue low, prefetch new data if not already prefetching
@@ -95,12 +104,13 @@ export default class AwaitedBuffer<T> {
 
     if (!v) throw Error("No data to load");
 
+    this.current = v;
     return v;
   }
 
 
   public async clear() {
-
+    this.current = null;
     if (this.promiseLoad) {
       await this.promiseLoad;
     }

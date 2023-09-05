@@ -32,22 +32,21 @@ function RateName({ user, group }: { user: User; group: GroupMembershipType }) {
   );
 
   if (!GlobalNamesQueue.names) {
-    console.log(GlobalNamesQueue.names);
     GlobalNamesQueue.names = new AwaitedBuffer(async () => {
       return await fetchUnratedNames(group.group_id, user, 18, genders);
     }, 9);
   }
   const namesQueue = GlobalNamesQueue.names;
-
-  useEffect(() => {
+  //console.log("namesQueue", namesQueue);
+  const setGender = (sex: Sex) => {
+    setGenders(sex);
     namesQueue.setReload(async () => {
-      return await fetchUnratedNames(group.group_id, user, 18, genders);
+      return await fetchUnratedNames(group.group_id, user, 18, sex);
     });
     next();
-  }, [genders]);
+  };
 
   const next = async () => {
-    //console.log("next");
     setNameLoading(true);
     setName(await namesQueue.dequeue());
     setNameLoading(false); // Set loading state to false once the fetch is done
@@ -73,10 +72,15 @@ function RateName({ user, group }: { user: User; group: GroupMembershipType }) {
   };
 
   useEffect(() => {
-    // Function to fetch data from the API
-    console.log("count", namesQueue.count());
-    if (namesQueue.count() === 0) {
-      next(); // Call the fetch function when the component mounts
+    // check if data has already been viewed
+    const prev = namesQueue.getCurrent();
+    if (prev) {
+      // show the last item dequeued
+      setName(prev);
+      setNameLoading(false); // loading component is shown by default, clear it if refreshing and data is already there
+    } else {
+      // fetch next entry from queue
+      next();
     }
   }, []);
 
@@ -111,7 +115,7 @@ function RateName({ user, group }: { user: User; group: GroupMembershipType }) {
               type="radio"
               checked={genders === Sex.male}
               onChange={() => {
-                setGenders(Sex.male);
+                setGender(Sex.male);
               }}
             />
             Boy
@@ -121,7 +125,7 @@ function RateName({ user, group }: { user: User; group: GroupMembershipType }) {
               type="radio"
               checked={genders === Sex.female}
               onChange={() => {
-                setGenders(Sex.female);
+                setGender(Sex.female);
               }}
             />
             Girl
@@ -131,7 +135,7 @@ function RateName({ user, group }: { user: User; group: GroupMembershipType }) {
               type="radio"
               checked={genders === Sex.unisex}
               onChange={() => {
-                setGenders(Sex.unisex);
+                setGender(Sex.unisex);
               }}
             />
             Unisex
@@ -141,7 +145,7 @@ function RateName({ user, group }: { user: User; group: GroupMembershipType }) {
               type="radio"
               checked={genders === Sex.all}
               onChange={() => {
-                setGenders(Sex.all);
+                setGender(Sex.all);
               }}
             />
             All
