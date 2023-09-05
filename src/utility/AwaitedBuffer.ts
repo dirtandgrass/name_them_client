@@ -52,7 +52,7 @@ export default class AwaitedBuffer<T> {
 
   // take next item from queue
   async dequeue(): Promise<T> {
-    console.log("prefetching", this.count(), this.low, this.promiseLoad);
+    //console.log("prefetching", this.count(), this.low, this.promiseLoad);
     // queue empty
     if (this.count() <= 0) {
       if (this.promiseLoad) { // there's a fetch in progress
