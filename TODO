@@ -1,0 +1,9 @@
+Login
+
+- Fix issues with expired login
+- cleanup old db rows for sessions
+
+Village/Groups
+
+- Create village UI
+- Invite to village ui
