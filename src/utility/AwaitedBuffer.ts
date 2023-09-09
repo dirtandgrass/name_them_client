@@ -1,14 +1,29 @@
 
 
-
+/**
+ * Represents a buffer that asynchronously loads and stores items of type T
+ * automatically from a given function.
+ * Items can be enqueued, dequeued, and the buffer can be cleared.
+ *
+ * @template T - The type of items stored in the buffer.
+ */
 export default class AwaitedBuffer<T> {
   private storage: T[] = [];
   private promiseLoad: Promise<T> | null = null;
   private current: T | null = null;
 
-  // takes an asynchromous function that returns an array of items type T
+  /**
+    * Creates a new AwaitedBuffer instance.
+    *
+    * @param reloadFunction - An asynchronous function that returns an array of items of type T.
+    * @param low - The minimum number of items to in the buffer before loading more.
+    * @param uniqueVals - Indicates whether duplicate items are allowed in the buffer.
+    * @param autoExtendLowMax - The maximum number of items to load at once when the buffer is low.
+    * @param clearQueueOnReloadChange - Indicates whether the buffer should be cleared when the reload function is changed.
+    * @throws An error if low is less than 1.
+    */
   constructor(
-    private reload: () => Promise<T[]>,
+    private reloadFunction: () => Promise<T[]>,
     private low: number = 3,
     private uniqueVals = true,
     private autoExtendLowMax = 15, private clearQueueOnReloadChange = true) {
@@ -17,24 +32,14 @@ export default class AwaitedBuffer<T> {
   }
 
   public async setReload(reload: () => Promise<T[]>) {
-    this.reload = reload;
+    this.reloadFunction = reload;
     if (this.clearQueueOnReloadChange) {
-
-      if (this.promiseLoad) { // there's a fetch in progress
-        await this.promiseLoad; // wait for it
-        this.promiseLoad = null; // clear promise
+      if (this.promiseLoad) {
+        await this.promiseLoad;
+        this.promiseLoad = null;
       }
       this.storage = [];
     }
-
-    // // otherwise, fetch new data
-    // const newData = await this.reload();
-    // // problem fetching new data (or no new data)
-    // if (!newData || newData.length === 0) {
-    //   throw Error("No data to load");
-    // }
-    // // add new data to queue
-    // newData.forEach(item => { this.enqueue(item) })
   }
 
 
@@ -50,71 +55,66 @@ export default class AwaitedBuffer<T> {
     return true;
   }
 
-  // take next item from queue
+
+
+  private async loadMore(): Promise<T> {
+    return new Promise((resolve) => {
+      this.reloadFunction().then((newData) => {
+        if (newData) {
+          newData.forEach(item => this.enqueue(item));
+          resolve(newData[0]);
+        }
+        this.promiseLoad = null;
+      });
+    });
+  }
+
   async dequeue(): Promise<T> {
-    //console.log("prefetching", this.count(), this.low, this.promiseLoad);
-    // queue empty
-    if (this.count() <= 0) {
-      if (this.promiseLoad) { // there's a fetch in progress
-        const nextValue = await this.promiseLoad; // wait for it
-        this.promiseLoad = null; // clear promise
-        if (this.low < this.autoExtendLowMax) { // prefetch earlier
+    if (this.isEmpty()) {
+      if (this.promiseLoad) {
+        // if there is a fetch in progress, wait for it to finish
+        const nextValue = await this.promiseLoad;
+        this.promiseLoad = null;
+        if (this.low < this.autoExtendLowMax) {
           this.low++;
         }
-        return nextValue; // return next value
-
+        return nextValue;
       }
-
-      // otherwise, fetch new data
-      // need to set promiseLoad to prevent new fetch if re-entry
-      this.promiseLoad = new Promise(async (resolve) => {
-        const newData = await this.reload();
-        // problem fetching new data (or no new data)
-        if (!newData || newData.length === 0) {
-          throw Error("No data to load");
-        }
-        // add new data to queue
-        newData.forEach(item => { this.enqueue(item) })
-
-        resolve(newData[0]);
-      });
-
-      // since queue is empty await
+      this.promiseLoad = this.loadMore();
       await this.promiseLoad;
-      this.promiseLoad = null; // clear promise
+      this.promiseLoad = null;
 
-    } else if (this.count() <= this.low && !this.promiseLoad) {
-      // queue low, prefetch new data if not already prefetching
-
-      //fetch new data
-      this.promiseLoad = new Promise((resolve) => {
-        this.reload().then((v) => {
-          if (v) {
-            v.forEach(item => this.enqueue(item))
-            resolve(v[0])
-          }
-
-          this.promiseLoad = null; // clear promise
-        })
-      });
+    } else if (this.shouldLoadMoreData()) {
+      // queue is low, load more
+      this.promiseLoad = this.loadMore();
     }
 
-    // take next item from queue
-    const v: T | undefined = this.storage.shift();
-
-    if (!v) throw Error("No data to load");
-
-    this.current = v;
-    return v;
+    const nextItem: T | undefined = this.storage.shift();
+    if (!nextItem) {
+      throw Error("No data to load");
+    }
+    this.current = nextItem;
+    return nextItem;
   }
 
 
   public async clear() {
     this.current = null;
+
     if (this.promiseLoad) {
       await this.promiseLoad;
     }
-    this.storage = [];
+
+    this.storage.length = 0;
+  }
+
+
+  private shouldLoadMoreData(): boolean {
+    return this.storage.length <= this.low && !this.promiseLoad;
+  }
+
+  public isEmpty(): boolean {
+    return this.storage.length <= 0;
   }
 
   public count(): number {

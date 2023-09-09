@@ -15,7 +15,7 @@ function Login({
   user: User;
   setUser: React.Dispatch<React.SetStateAction<User>>;
   setPage: React.Dispatch<React.SetStateAction<PageType>>;
-  setGroup: React.Dispatch<React.SetStateAction<GroupMembershipType | null>>;
+  setGroup: React.Dispatch<React.SetStateAction<GroupMembershipType>>;
 }) {
   useEffect(() => {
     if (!user) {
@@ -43,7 +43,7 @@ function Login({
 
   function logOut() {
     setUser(defaultUser);
-    setGroup(null);
+    setGroup(defaultGroup);
     setPage(PageType.names);
   }
 

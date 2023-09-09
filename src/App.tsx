@@ -21,7 +21,7 @@ import CreateGroup from "./components/DialogForms/CreateGroup";
 
 function App() {
   const [user, setUser] = useStorage<User>("user", defaultUser, "local");
-  const [group, setGroup] = useStorage<GroupMembershipType | null>(
+  const [group, setGroup] = useStorage<GroupMembershipType>(
     "group",
     defaultGroup,
     "local"
@@ -31,6 +31,8 @@ function App() {
   const [loggedIn, setLoggedIn] = useState<boolean>(
     (user?.isLoggedIn && user?.isLoggedIn()) ?? false
   );
+
+  const [groups, setGroups] = useState<GroupMembershipType[]>([]);
 
   const [globalLoading, setGlobalLoading] = useState<boolean>(false); // state for glocal loading context
   const loadingValue = useMemo(
@@ -90,7 +92,13 @@ function App() {
               setGroup={setGroup}
             />
             {loggedIn && group ? (
-              <GroupInfo user={user} group={group} setGroup={setGroup} />
+              <GroupInfo
+                user={user}
+                group={group}
+                setGroup={setGroup}
+                setGroups={setGroups}
+                groups={groups}
+              />
             ) : (
               <></>
             )}
@@ -100,7 +108,16 @@ function App() {
         <main>
           <Sections page={page} user={user} group={group} loggedIn={loggedIn} />
         </main>
-        {loggedIn ? <CreateGroup /> : <RegistrationForm />}
+        {loggedIn ? (
+          <CreateGroup
+            user={user}
+            setGroup={setGroup}
+            groups={groups}
+            setGroups={setGroups}
+          />
+        ) : (
+          <RegistrationForm />
+        )}
         <footer></footer>
       </GlobalLoadingContext.Provider>
     </span>

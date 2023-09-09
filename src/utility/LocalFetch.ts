@@ -9,11 +9,7 @@ export enum HttpMethod {
 }
 
 const API_PATH = "/api/";
-export default async function localFetch({ path, method, data, user }: { path: string, method?: HttpMethod, data?: object, user?: User }): Promise<object> {
-
-
-  if (method === undefined) method = HttpMethod.GET;
-
+export default async function localFetch({ path, method = HttpMethod.GET, data, user }: { path: string, method?: HttpMethod, data?: object, user?: User }): Promise<object> {
   const reqHead: HeadersInit = new Headers();
   reqHead.set('Content-Type', 'application/json');
   if (user) {
@@ -23,12 +19,11 @@ export default async function localFetch({ path, method, data, user }: { path: s
   }
 
   const response = await fetch(API_PATH + path, {
-    method: method,
+    method,
     mode: 'cors',
     headers: reqHead,
     body: data ? JSON.stringify(data) : undefined
   });
 
   return await response.json();
-
 }

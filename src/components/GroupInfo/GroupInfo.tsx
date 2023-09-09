@@ -7,12 +7,15 @@ export default function GroupInfo({
   user,
   group,
   setGroup,
+  groups,
+  setGroups,
 }: {
   user: User;
   group: GroupMembershipType;
-  setGroup: React.Dispatch<React.SetStateAction<GroupMembershipType | null>>;
+  setGroup: React.Dispatch<React.SetStateAction<GroupMembershipType>>;
+  groups: GroupMembershipType[];
+  setGroups: React.Dispatch<React.SetStateAction<GroupMembershipType[]>>;
 }) {
-  const [groups, setGroups] = useState<GroupMembershipType[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -52,7 +55,7 @@ export default function GroupInfo({
     if (groups.length > 0 && group) {
       setGroup(groups.find((g) => g.group_id === group.group_id) || groups[0]);
     }
-  }, [groups, group, setGroup]);
+  }, [group]);
 
   function selectedGroupChange(e: React.ChangeEvent<HTMLSelectElement>) {
     const selectedGroup = groups.find(

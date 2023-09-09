@@ -11,9 +11,10 @@ export default class Group {
 
 
 
-  static async createGroup(name: string, description: string): Promise<response & { group_id?: number }> {
+  static async createGroup(name: string, description: string): Promise<response & { group_id?: number, group?: { name: string, description: string, user_id: number, role: Role, accepted: boolean } }> {
 
     const user_id = AuthUser?.user_id || 0;
+
     if (user_id === 0) return { "message": "not logged in", "success": false };
 
 
@@ -40,7 +41,7 @@ export default class Group {
     }
 
 
-    return { "message": "success", "success": true, "group_id": group_id };
+    return { "message": "success", "success": true, "group_id": group_id, "group": { name: name, description: description, user_id, role: "admin", accepted: true } };
 
 
   }

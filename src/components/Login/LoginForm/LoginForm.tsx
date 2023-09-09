@@ -3,6 +3,7 @@ import localFetch, { HttpMethod } from "../../../utility/LocalFetch";
 import { User, defaultUser } from "../../../types/User";
 import { useContext } from "react";
 import GlobalLoadingContext from "../../../utility/GlobalLoadingContext";
+import { loginMessage } from "../../../types/Api";
 
 function LoginForm({
   setUser,
@@ -14,8 +15,10 @@ function LoginForm({
   async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
     setGlobalLoading(true);
     e.preventDefault();
+
     const formEl = e.target as HTMLFormElement;
-    const data = Object.fromEntries(new FormData(formEl).entries()) as {
+    const formData = new FormData(formEl);
+    const data = Object.fromEntries(formData.entries()) as {
       username: string;
       password: string;
     };
@@ -24,26 +27,17 @@ function LoginForm({
       path: "user/?action=login",
       method: HttpMethod.POST,
       data,
-    })) as {
-      message: string;
-      success: boolean;
-      user?: User;
-      session?: {
-        message: string;
-        success: boolean;
-        session_id?: number;
-        session?: string;
-      };
-    };
+    })) as loginMessage;
 
     if (result.success && result.user && result.session?.success) {
+      const { user, session } = result;
       setUser(
         new User(
-          result.user.user_id,
-          result.user.username,
-          result.user.email,
-          result.session.session_id,
-          result.session.session
+          user.user_id,
+          user.username,
+          user.email,
+          session.session_id,
+          session.session
         )
       );
     } else {
