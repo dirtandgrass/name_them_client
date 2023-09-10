@@ -1,12 +1,12 @@
 
 import { Sex, ratingMessage } from "../types/Api";
-import { User } from "../types/User";
+import { user } from "../types/User";
 import localFetch, { HttpMethod } from "../utility/LocalFetch";
 
 
 
 
-export const topRated = async ({ user: user, group_id, count = 5, sex = Sex.all }: { user: User, group_id: number, count: number, sex: Sex }): Promise<ratingMessage> => {
+export const topRated = async ({ user: user, group_id, count = 5, sex = Sex.all }: { user: user, group_id: number, count: number, sex: Sex }): Promise<ratingMessage> => {
   try {
 
     const response: any = await localFetch({

@@ -49,7 +49,7 @@ export default class AwaitedBuffer<T> {
   }
 
   // public so can manually add items
-  enqueue(item: T): boolean {
+  public enqueue(item: T): boolean {
     if (this.uniqueVals && this.storage.includes(item)) return false;
     this.storage.push(item);
     return true;

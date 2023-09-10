@@ -1,7 +1,11 @@
-import { GroupMembershipType } from "../../../types/Group";
-import { User } from "../../../types/User";
+import { useContext } from "react";
+import GroupContext from "../../../utility/GroupContext";
+import UserContext from "../../../utility/UserContext";
 
-function Village({ user, group }: { user: User; group: GroupMembershipType }) {
+function Village() {
+  const { group } = useContext(GroupContext);
+  const { user } = useContext(UserContext);
+
   if (group.role === "admin") {
   }
 
@@ -28,16 +32,18 @@ function Village({ user, group }: { user: User; group: GroupMembershipType }) {
           people you invite can participate and see results.
         </li>
       </ul>
+      <div>
+        <button onClick={showCreate}>Create New Village</button>
+      </div>
       <div className="selected">
         <h2>
           Selected Village: <span>{group.name}</span>
         </h2>
+        <h3>Role:</h3>
+        <span>{group.role}</span>
+        <h3>Description:</h3>
 
-        <div>{group.description}</div>
-        <div>{group.role}</div>
-      </div>
-      <div>
-        <button onClick={showCreate}>Create Village</button>
+        <p>{group.description}</p>
       </div>
     </section>
   );

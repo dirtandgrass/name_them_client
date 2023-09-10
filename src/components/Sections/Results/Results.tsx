@@ -1,11 +1,14 @@
-import { useEffect, useState } from "react";
-import { GroupMembershipType } from "../../../types/Group";
-import { User } from "../../../types/User";
+import { useContext, useEffect, useState } from "react";
 import { topRated } from "../../../remote/rating";
 import { Sex, ratingMessage, ratingRecord } from "../../../types/Api";
 import Spinner from "../../Spinner/Spinner";
+import UserContext from "../../../utility/UserContext";
+import GroupContext from "../../../utility/GroupContext";
 
-function Results({ user, group }: { user: User; group: GroupMembershipType }) {
+function Results() {
+  const { user } = useContext(UserContext);
+  const { group } = useContext(GroupContext);
+
   const [boys, setBoys] = useState<ratingMessage>({
     message: "loading",
     success: false,
@@ -89,25 +92,27 @@ function Results({ user, group }: { user: User; group: GroupMembershipType }) {
     );
 
   return (
-    <div id="results">
-      <h2>Top Rated Names</h2>
-      <div>
-        <h3>Boys</h3>
-        <ul>{boysClause}</ul>
+    <section>
+      <div id="results">
+        <h2>Top Rated Names</h2>
+        <div>
+          <h3>Boys</h3>
+          <ul>{boysClause}</ul>
+        </div>
+        <div>
+          <h3>Girls</h3>
+          <ul>{girlsClause}</ul>
+        </div>
+        <div>
+          <h3>Unisex</h3>
+          <ul>{unisexClause}</ul>
+        </div>
+        <div>
+          <h3>All</h3>
+          <ul>{allClause}</ul>
+        </div>
       </div>
-      <div>
-        <h3>Girls</h3>
-        <ul>{girlsClause}</ul>
-      </div>
-      <div>
-        <h3>Unisex</h3>
-        <ul>{unisexClause}</ul>
-      </div>
-      <div>
-        <h3>All</h3>
-        <ul>{allClause}</ul>
-      </div>
-    </div>
+    </section>
   );
 }
 

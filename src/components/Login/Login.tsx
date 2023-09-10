@@ -1,39 +1,25 @@
-import { User, defaultUser } from "../../types/User";
+import { user, defaultUser, isLoggedIn } from "../../types/User";
 import "./Login.css";
 
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import LoginForm from "./LoginForm/LoginForm";
 import { PageType } from "../../types/Menu";
 import { GroupMembershipType, defaultGroup } from "../../types/Group";
+import GroupContext from "../../utility/GroupContext";
+import UserContext from "../../utility/UserContext";
 
 function Login({
-  user,
-  setUser,
   setPage,
-  setGroup,
 }: {
-  user: User;
-  setUser: React.Dispatch<React.SetStateAction<User>>;
   setPage: React.Dispatch<React.SetStateAction<PageType>>;
-  setGroup: React.Dispatch<React.SetStateAction<GroupMembershipType>>;
 }) {
+  const { user, setUser } = useContext(UserContext);
+  const { setGroup } = useContext(GroupContext);
   useEffect(() => {
-    if (!user) {
+    if (!user || !isLoggedIn(user)) {
       logOut();
       setPage(PageType.names);
       return;
-    }
-    // storage only stores data members, recreate User object if needed
-    if (!user.isLoggedIn) {
-      setUser(
-        new User(
-          user.user_id,
-          user.username,
-          user.email,
-          user.session_id,
-          user.session
-        )
-      );
     }
   }, []);
 
@@ -56,7 +42,7 @@ function Login({
     registrationForm?.showModal();
   }
 
-  if (user?.isLoggedIn && user?.isLoggedIn()) {
+  if (isLoggedIn(user)) {
     return (
       <div>
         <p>

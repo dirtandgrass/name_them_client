@@ -1,12 +1,10 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import { NameType } from "../RandomNameList/RandomNameList";
-import { User } from "../../../../types/User";
 
 import "./RateName.css";
 import NameSource from "../NameSource/NameSource";
 import { fetchUnratedNames, rateName } from "../../../../remote/name";
-import { GroupMembershipType } from "../../../../types/Group";
 
 import { setLoading as setNameLoading } from "../NameLoader/NameLoader";
 import AwaitedBuffer from "../../../../utility/AwaitedBuffer";
@@ -14,6 +12,8 @@ import { Sex } from "../../../../types/Api";
 import useStorage from "../../../../hooks/useStorage";
 
 import { GlobalNamesQueue } from "../../../../utility/NamesQueue";
+import UserContext from "../../../../utility/UserContext";
+import GroupContext from "../../../../utility/GroupContext";
 
 export enum NameRating {
   No = 0,
@@ -22,8 +22,10 @@ export enum NameRating {
   Love = 1,
 }
 
-function RateName({ user, group }: { user: User; group: GroupMembershipType }) {
+function RateName() {
   const [name, setName] = useState<NameType>();
+  const { group } = useContext(GroupContext);
+  const { user } = useContext(UserContext);
 
   const [genders, setGenders] = useStorage(
     "genders" + group.group_id,

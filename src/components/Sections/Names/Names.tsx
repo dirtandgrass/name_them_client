@@ -1,24 +1,22 @@
+import { useContext } from "react";
 import { GroupMembershipType } from "../../../types/Group";
-import { User } from "../../../types/User";
+import { isLoggedIn, user } from "../../../types/User";
+import UserContext from "../../../utility/UserContext";
 import NameLoader from "./NameLoader/NameLoader";
 import RandomNameList from "./RandomNameList/RandomNameList";
 import RateName from "./RateName/RateName";
+import GroupContext from "../../../utility/GroupContext";
 
-function Names({
-  user,
-  group,
-  loggedIn,
-}: {
-  user: User;
-  group: GroupMembershipType | null;
-  loggedIn: boolean;
-}) {
+function Names() {
+  const { user } = useContext(UserContext);
+  const { group } = useContext(GroupContext);
+
   return (
     <>
       <NameLoader />
-      {loggedIn && group?.group_id && group.group_id > 0 ? (
+      {isLoggedIn(user) && group?.group_id && group.group_id > 0 ? (
         <div id="rate-name">
-          <RateName user={user} group={group} />
+          <RateName />
         </div>
       ) : (
         <>

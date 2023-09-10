@@ -1,16 +1,16 @@
 import "./LoginForm.css";
 import localFetch, { HttpMethod } from "../../../utility/LocalFetch";
-import { User, defaultUser } from "../../../types/User";
+import { user, defaultUser } from "../../../types/User";
 import { useContext } from "react";
-import GlobalLoadingContext from "../../../utility/GlobalLoadingContext";
+import LoadingContext from "../../../utility/LoadingContext";
 import { loginMessage } from "../../../types/Api";
 
 function LoginForm({
   setUser,
 }: {
-  setUser: React.Dispatch<React.SetStateAction<User>>;
+  setUser: React.Dispatch<React.SetStateAction<user>>;
 }) {
-  const { setGlobalLoading } = useContext(GlobalLoadingContext);
+  const { setLoading: setGlobalLoading } = useContext(LoadingContext);
 
   async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
     setGlobalLoading(true);
@@ -31,15 +31,11 @@ function LoginForm({
 
     if (result.success && result.user && result.session?.success) {
       const { user, session } = result;
-      setUser(
-        new User(
-          user.user_id,
-          user.username,
-          user.email,
-          session.session_id,
-          session.session
-        )
-      );
+      setUser({
+        ...user,
+        session: session.session,
+        session_id: session.session_id,
+      });
     } else {
       logOut();
     }

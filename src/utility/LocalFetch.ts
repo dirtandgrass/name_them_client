@@ -1,4 +1,4 @@
-import { User } from "../types/User";
+import { user } from "../types/User";
 
 export enum HttpMethod {
   GET = 'GET',
@@ -9,7 +9,7 @@ export enum HttpMethod {
 }
 
 const API_PATH = "/api/";
-export default async function localFetch({ path, method = HttpMethod.GET, data, user }: { path: string, method?: HttpMethod, data?: object, user?: User }): Promise<object> {
+export default async function localFetch({ path, method = HttpMethod.GET, data, user }: { path: string, method?: HttpMethod, data?: object, user?: user }): Promise<object> {
   const reqHead: HeadersInit = new Headers();
   reqHead.set('Content-Type', 'application/json');
   if (user) {

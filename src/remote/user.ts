@@ -1,5 +1,5 @@
 import { message } from "../types/Api";
-import { User } from "../types/User";
+import { user } from "../types/User";
 import localFetch, { HttpMethod } from "../utility/LocalFetch";
 
 
@@ -23,7 +23,7 @@ export const validate = async (user_id: number, code: string): Promise<message> 
 };
 
 export const register = async (
-  username: string, email: string, password: string): Promise<{ message: string; success: boolean; user?: User; }> => {
+  username: string, email: string, password: string): Promise<{ message: string; success: boolean; user?: user; }> => {
   const data = { username, email, password };
   return await localFetch({
     path: "user/?action=register",
@@ -32,7 +32,7 @@ export const register = async (
   }) as {
     message: string;
     success: boolean;
-    user?: User;
+    user?: user;
   };
 
 }

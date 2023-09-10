@@ -1,4 +1,4 @@
-import { User } from "./User";
+import { user } from "./User";
 
 export type message = {
   message: string;
@@ -13,7 +13,7 @@ type ratingFields = {
 }
 
 type loginFields = {
-  user?: User,
+  user?: user,
   session?: {
     session_id?: number;
     message: string;

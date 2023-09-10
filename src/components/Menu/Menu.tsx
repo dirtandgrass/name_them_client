@@ -1,44 +1,16 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { PageType } from "../../types/Menu";
-import { User } from "../../types/User";
 import "./Menu.css";
+import UserContext from "../../utility/UserContext";
 
 function Menu({
   setPage,
   page,
-  user,
 }: {
   setPage: React.Dispatch<React.SetStateAction<PageType>>;
   page: PageType;
-  user: User;
 }) {
-  // const [utilityMenu, setUtilityMenu] = useState<JSX.Element | undefined>(
-  //   <></>
-  // );
-
-  // useEffect(() => {
-  //   buildUtilityMenu();
-  // }, [user]);
-
-  // useEffect(() => {
-  //   buildUtilityMenu();
-  // }, []);
-
-  // const buildUtilityMenu = () => {
-  //   if (user) {
-  //     setUtilityMenu(
-  //       <li
-  //         onClick={() => setPage(PageType.groups)}
-  //         className={page == PageType.groups ? "active" : "inactive"}
-  //       >
-  //         Village
-  //       </li>
-  //     );
-  //   } else {
-
-  //   }
-  //   }
-  // };
+  const { user } = useContext(UserContext);
 
   const utilityMenu =
     user.user_id > 0 ? (

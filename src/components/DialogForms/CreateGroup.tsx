@@ -1,21 +1,23 @@
 //import "./DialogForm.css";
 
+import { useContext } from "react";
 import { createGroupMessage } from "../../types/Api";
 import { GroupMembershipType } from "../../types/Group";
-import { User } from "../../types/User";
+import { user } from "../../types/User";
+import GroupContext from "../../utility/GroupContext";
 import localFetch, { HttpMethod } from "../../utility/LocalFetch";
+import UserContext from "../../utility/UserContext";
 
 function CreateGroup({
-  user,
-  setGroup,
   groups,
   setGroups,
 }: {
-  user: User;
-  setGroup: React.Dispatch<React.SetStateAction<GroupMembershipType>>;
   groups: GroupMembershipType[];
   setGroups: React.Dispatch<React.SetStateAction<GroupMembershipType[]>>;
 }) {
+  const { setGroup } = useContext(GroupContext);
+  const { user } = useContext(UserContext);
+
   function closeDialog() {
     const dialogForm = document.getElementById(
       "create-group-form"

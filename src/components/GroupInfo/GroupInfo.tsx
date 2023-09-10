@@ -1,31 +1,28 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import localFetch from "../../utility/LocalFetch";
-import { User } from "../../types/User";
+import { isLoggedIn, user } from "../../types/User";
 import { GroupMembershipType } from "../../types/Group";
+import GroupContext from "../../utility/GroupContext";
+import UserContext from "../../utility/UserContext";
 
 export default function GroupInfo({
-  user,
-  group,
-  setGroup,
   groups,
   setGroups,
 }: {
-  user: User;
-  group: GroupMembershipType;
-  setGroup: React.Dispatch<React.SetStateAction<GroupMembershipType>>;
   groups: GroupMembershipType[];
   setGroups: React.Dispatch<React.SetStateAction<GroupMembershipType[]>>;
 }) {
   const [loading, setLoading] = useState(true);
-
+  const { user } = useContext(UserContext);
+  const { group, setGroup } = useContext(GroupContext);
   useEffect(() => {
     const fetchData = async () => {
-      if (!user?.isLoggedIn || !user?.isLoggedIn()) return;
+      if (!isLoggedIn(user)) return;
       setLoading(true);
       try {
         const response = await localFetch({
           path: "group/",
-          user: user || undefined,
+          user: user,
         });
 
         const data = response as any;
@@ -68,7 +65,7 @@ export default function GroupInfo({
 
   if (loading) return <div className="group-info">Loading...</div>;
 
-  if (!user?.isLoggedIn || !user?.isLoggedIn()) return <></>;
+  if (!isLoggedIn(user)) return <></>;
 
   return (
     <div className="group-info">
