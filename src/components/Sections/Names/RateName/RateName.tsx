@@ -48,28 +48,34 @@ function RateName() {
     next();
   };
 
+  // when user changes, need to re-specify queue reload function
+  useEffect(() => {
+    namesQueue.setReload(async () => {
+      return await fetchUnratedNames(group.group_id, user, 18, genders);
+    });
+    next();
+  }, [user]);
+
   const next = async () => {
     setNameLoading(true);
     setName(await namesQueue.dequeue());
     setNameLoading(false); // Set loading state to false once the fetch is done
   };
 
-  const rate = (rating: NameRating) => {
-    if (
-      group?.group_id === undefined ||
-      user?.user_id === undefined ||
-      name === undefined
-    )
-      return;
+  const rate = async (rating: NameRating) => {
+    if (!group?.group_id || !user?.user_id || !name) return;
+
     setNameLoading(true);
-    const result = rateName(group.group_id, name.name_id, rating, user).then(
-      (msg) => {
-        if (!msg.success) {
-          //TODO : show error to user
-          console.error(msg.message);
-        }
+
+    try {
+      const msg = await rateName(group.group_id, name.name_id, rating, user);
+      if (!msg.success) {
+        console.error(msg.message);
       }
-    );
+    } catch (error) {
+      console.error(error);
+    }
+
     next();
   };
 
