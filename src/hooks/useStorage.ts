@@ -29,6 +29,8 @@ export default function useStorage<T>(key: string, initVal: T, sessionOrStorage:
       return
     }
 
+
+
     // if first value is id, and invalid, remove
     if (typeof (value) === "object" && Object.keys(value)[0]?.endsWith("_id") && Object.values(value)[0] as number <= 1) {
       sessionStorage.removeItem(key)

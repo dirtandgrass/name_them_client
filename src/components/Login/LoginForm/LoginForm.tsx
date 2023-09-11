@@ -4,14 +4,11 @@ import { user, defaultUser } from "../../../types/User";
 import { useContext } from "react";
 import LoadingContext from "../../../utility/LoadingContext";
 import { loginMessage } from "../../../types/Api";
+import UserContext from "../../../utility/UserContext";
 
-function LoginForm({
-  setUser,
-}: {
-  setUser: React.Dispatch<React.SetStateAction<user>>;
-}) {
+function LoginForm() {
   const { setLoading: setGlobalLoading } = useContext(LoadingContext);
-
+  const { setUser } = useContext(UserContext);
   async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
     setGlobalLoading(true);
     e.preventDefault();

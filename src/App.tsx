@@ -44,7 +44,6 @@ function App() {
 
   const validateUser = useCallback(async (user_id: number, code: string) => {
     const validated = await validate(user_id, code);
-
     if (validated.success) {
       window.history.replaceState(null, document.title, "/");
     }

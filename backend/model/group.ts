@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client'
-import headerauth, { AuthUser } from '../middleware/headerauth';
+import { AuthUser } from '../middleware/headerauth';
 import { randomHash } from '../utility/randomHash';
 import { response } from '../types/ApiMessage';
 const prisma = new PrismaClient()
@@ -15,7 +15,7 @@ export default class Group {
 
     const user_id = AuthUser?.user_id || 0;
 
-    if (user_id === 0) return { "message": "not logged in", "success": false };
+    if (user_id === 0) return { "message": "not logged in", "success": false, "error": 401 };
 
 
     let group_id = 0;
@@ -48,9 +48,9 @@ export default class Group {
 
 
 
-  static async inviteUser(group_id: number, guest_user_id: number, role: Role = "participant"): Promise<{ message: string, success: boolean }> {
+  static async inviteUser(group_id: number, guest_user_id: number, role: Role = "participant"): Promise<response> {
     const user_id = AuthUser?.user_id || 0;
-    if (user_id === 0) return { "message": "not logged in", "success": false };
+    if (user_id === 0) return { "message": "not logged in", "success": false, error: 401 };
     if (!Number.isInteger(group_id) || !Number.isInteger(guest_user_id)) {
       return { "message": "invalid data", "success": false };
     }
@@ -79,13 +79,13 @@ export default class Group {
     return { "message": "success", "success": true };
   }
 
-  static async acceptInvite(group_id: number, invite_key: string): Promise<{ message: string, success: boolean }> {
+  static async acceptInvite(group_id: number, invite_key: string): Promise<response> {
     const user_id = AuthUser?.user_id || 0;
-    if (user_id === 0) return { "message": "not logged in", "success": false };
+    if (user_id === 0) return { "message": "not logged in", "success": false, "error": 401 };
 
     if (!Number.isInteger(group_id)) return { "message": "invalid data", "success": false };
 
-    console.log(group_id, user_id, invite_key);
+    //console.log(group_id, user_id, invite_key);
     try {
       const result = await prisma.group_user.update({
         where: {
@@ -121,16 +121,16 @@ export default class Group {
   // }
 
   /* get groups the user is a member of, returns group_id, name, description, role */
-  static async getGroups(): Promise<{ message: string, count?: number, data?: Record<string, unknown>[], success: boolean }> {
+  static async getGroups(): Promise<response> {
 
     const user_id = AuthUser?.user_id || 0;
-    if (user_id === 0) return { "message": "not logged in", "success": false };
+    if (user_id === 0) return { "message": "not logged in", "success": false, "error": 401 };
 
     try {
       const result = await prisma.group_user.findMany({ where: { user_id: user_id }, select: { role: true, group_id: true, group: { select: { name: true, description: true } } } });
-      return { "message": "success", "success": true, "count": result.length, "data": result };
+      return { "message": "success", "success": true, "data": result };
     } catch (e) {
-      //console.log(e);
+      //console.log(e);```
       return { "message": "unable to get groups", "success": false };
     }
 
@@ -138,9 +138,9 @@ export default class Group {
   }
 
   /* determine if a user is a member of a group */
-  static async isMember(group_id: number): Promise<{ message: string, isMember: boolean, success: boolean }> {
+  static async isMember(group_id: number): Promise<response & { isMember: boolean }> {
     const user_id = AuthUser?.user_id || 0;
-    if (user_id === 0) return { "message": "not logged in", isMember: false, "success": false };
+    if (user_id === 0) return { "message": "not logged in", isMember: false, "success": false, error: 401 };
 
 
     try {

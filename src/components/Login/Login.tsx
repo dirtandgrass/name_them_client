@@ -56,7 +56,7 @@ function Login({
   } else {
     let form: JSX.Element;
 
-    form = <LoginForm setUser={setUser} />;
+    form = <LoginForm />;
 
     return (
       <div>

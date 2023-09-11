@@ -7,7 +7,7 @@ import { Sex } from '../backend/model/name';
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   await headerauth(req, res);
   // a user is required for rating functionality
-  if (!AuthUser || !AuthUser.user_id) { res.json({ message: "not logged in", success: false }); return; }
+  if (!AuthUser || !AuthUser.user_id) { res.json({ message: "not logged in", success: false, error: 401 }); return; }
   const name_id = parseInt(req.query.name_id as string);
 
 

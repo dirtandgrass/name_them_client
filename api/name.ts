@@ -69,7 +69,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       } case "unrated": {
 
         await headerauth(req, res);
-        if (!AuthUser || !AuthUser.user_id) { res.json({ message: "not logged in", success: false }); return; }
+        if (!AuthUser || !AuthUser.user_id) { res.json({ message: "not logged in", success: false, error: 401 }); return; }
 
         if (!req.query.group_id) { res.json({ message: "no group_id specified", success: false }); return; }
         const group_id = parseInt(req.query.group_id?.toString());
