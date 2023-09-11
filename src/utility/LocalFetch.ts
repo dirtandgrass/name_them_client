@@ -1,4 +1,4 @@
-import { user } from "../types/User";
+import { defaultUser, user } from "../types/User";
 
 export enum HttpMethod {
   GET = 'GET',
@@ -7,6 +7,12 @@ export enum HttpMethod {
   DELETE = 'DELETE',
   PATCH = 'PATCH'
 }
+
+export const setSetUserFunction = (setUser: React.Dispatch<React.SetStateAction<user>>) => {
+  setUserFunction = setUser;
+}
+
+let setUserFunction: React.Dispatch<React.SetStateAction<user>> | null = null
 
 const API_PATH = "/api/";
 export default async function localFetch({ path, method = HttpMethod.GET, data, user }: { path: string, method?: HttpMethod, data?: object, user?: user }): Promise<object> {
@@ -24,6 +30,11 @@ export default async function localFetch({ path, method = HttpMethod.GET, data, 
     headers: reqHead,
     body: data ? JSON.stringify(data) : undefined
   });
+  const res = await response.json();
 
-  return await response.json();
+  if (setUserFunction && res?.error === 401) {
+    setUserFunction(defaultUser);
+  }
+
+  return res;
 }

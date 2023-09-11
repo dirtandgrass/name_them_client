@@ -19,10 +19,12 @@ import LoadingContext from "./utility/LoadingContext";
 import CreateGroup from "./components/DialogForms/CreateGroup";
 import GroupContext from "./utility/GroupContext";
 import UserContext from "./utility/UserContext";
+import localFetch, { setSetUserFunction } from "./utility/LocalFetch";
 //import UserContext from "./utility/UserContext";
 
 function App() {
   const [user, setUser] = useStorage<user>("user", defaultUser, "local");
+  setSetUserFunction(setUser);
   const [group, setGroup] = useStorage<GroupMembershipType>(
     "group",
     defaultGroup,
