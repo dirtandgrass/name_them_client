@@ -7,6 +7,12 @@ import { user } from "../../types/User";
 import GroupContext from "../../utility/GroupContext";
 import localFetch, { HttpMethod } from "../../utility/LocalFetch";
 import UserContext from "../../utility/UserContext";
+import { z } from "zod";
+
+const GroupSchema = z.object({
+  name: z.string().min(1).max(100),
+  description: z.string().max(1000),
+});
 
 function CreateGroup({
   groups,
@@ -34,6 +40,13 @@ function CreateGroup({
       name: string;
       description: string;
     };
+
+    const validation = GroupSchema.safeParse({ name, description });
+    if (!validation.success) {
+      // TODO: show error to user
+      console.log("create group parse error", validation.error);
+      return;
+    }
 
     const result = (await localFetch({
       path: "group/",

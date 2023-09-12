@@ -109,7 +109,7 @@ export default class AwaitedBuffer<T> {
   }
 
 
-  private shouldLoadMoreData(): boolean {
+  public shouldLoadMoreData(): boolean {
     return this.storage.length <= this.low && !this.promiseLoad;
   }
 

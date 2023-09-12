@@ -20,6 +20,7 @@ import CreateGroup from "./components/DialogForms/CreateGroup";
 import GroupContext from "./utility/GroupContext";
 import UserContext from "./utility/UserContext";
 import localFetch, { setSetUserFunction } from "./utility/LocalFetch";
+import InviteUserToGroup from "./components/DialogForms/InviteUserToGroup";
 //import UserContext from "./utility/UserContext";
 
 function App() {
@@ -53,6 +54,15 @@ function App() {
     return validated.success;
   }, []);
 
+  let conditionalBlock = <RegistrationForm />;
+
+  if (isLoggedIn(user)) {
+    conditionalBlock = <CreateGroup groups={groups} setGroups={setGroups} />;
+    if (group.role === "admin") {
+      conditionalBlock = <InviteUserToGroup />;
+    }
+  }
+
   return (
     <UserContext.Provider value={{ user, setUser }}>
       <span className={isLoggedIn(user) ? "logged-in" : "logged-out"}>
@@ -80,11 +90,7 @@ function App() {
             <main>
               <Sections page={page} />
             </main>
-            {isLoggedIn(user) ? (
-              <CreateGroup groups={groups} setGroups={setGroups} />
-            ) : (
-              <RegistrationForm />
-            )}
+            {conditionalBlock}
             <footer></footer>
           </LoadingContext.Provider>
         </GroupContext.Provider>
