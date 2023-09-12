@@ -5,7 +5,7 @@ import headerauth from '../backend/middleware/headerauth';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const { method, body } = req;
-  await headerauth(req, res);
+  await headerauth(req, res); // all group actions require authenticated user
   if (method === "POST") {
 
     const { group_id, action, user_id, role, key, name, description, email } = body;

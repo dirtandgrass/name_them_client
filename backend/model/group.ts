@@ -51,24 +51,24 @@ export default class Group {
   static async inviteUserByEmail(group_id: number, email: string, role: Role = "participant"): Promise<response> {
     const user_id = AuthUser?.user_id || 0;
 
-    return { message: "not implemented: " + AuthUser?.user_id, success: false };
+    //return { message: "not implemented: " + AuthUser?.user_id, success: false };
 
 
-    // if (user_id === 0) return { "message": "not logged in", "success": false, error: 401 };
+    if (user_id === 0) return { "message": "not logged in", "success": false, error: 401 };
 
-    // const emailSchema = z.string().email().toLowerCase().trim();
+    const emailSchema = z.string().email().toLowerCase().trim();
 
-    // const p_result = emailSchema.safeParse(email);
-    // if (!p_result.success) return { "message": `invalid email ${p_result.error}`, "success": false };
+    const p_result = emailSchema.safeParse(email);
+    if (!p_result.success) return { "message": `invalid email ${p_result.error}`, "success": false };
 
-    // //try {
-    // const lookup = await prisma.user.findFirst({ where: { email: p_result.data }, select: { user_id: true } });
-    // console.log(lookup);
-    // //} catch (e) {
+    //try {
+    const lookup = await prisma.user.findFirst({ where: { email: p_result.data }, select: { user_id: true } });
+    console.log(lookup);
+    //} catch (e) {
 
-    // //}
+    //}
 
-    // return { message: "success", success: true, data: lookup };
+    return { message: "success", success: true, data: lookup };
 
   }
 
