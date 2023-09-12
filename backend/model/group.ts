@@ -57,14 +57,14 @@ export default class Group {
     const p_result = emailSchema.safeParse(email);
     if (!p_result.success) return { "message": `invalid email ${p_result.error}`, "success": false };
 
-    try {
-      const lookup = await prisma.user.findFirst({ where: { email: p_result.data }, select: { user_id: true } });
-      console.log(lookup);
-    } catch (e) {
+    //try {
+    const lookup = await prisma.user.findFirst({ where: { email: p_result.data }, select: { user_id: true } });
+    console.log(lookup);
+    //} catch (e) {
 
-    }
+    //}
 
-    return { message: "success", success: true };
+    return { message: "success", success: true, data: lookup };
 
   }
 
