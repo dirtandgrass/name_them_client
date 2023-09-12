@@ -8,14 +8,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   if (method === "POST") {
 
-    const { group_id, action, user_id, role, key, name, description } = body;
+    const { group_id, action, user_id, role, key, name, description, email } = body;
 
     if (parseInt(group_id) && typeof action === "string") {
       switch (action) {
         case "invite": {
-          const result = await Group.inviteUser(parseInt(group_id), parseInt(user_id), role || "participant");
-          res.json(result);
-          return;
+          if (email) {
+            const result = await Group.inviteUserByEmail(parseInt(group_id), email, role || "participant");
+            res.json(result);
+            return;
+          } else {
+            const result = await Group.inviteUser(parseInt(group_id), parseInt(user_id), role || "participant");
+            res.json(result);
+            return;
+          }
         }
         case "accept": {
           const result = await Group.acceptInvite(parseInt(group_id), key as string);
