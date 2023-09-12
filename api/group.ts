@@ -5,7 +5,7 @@ import headerauth from '../backend/middleware/headerauth';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const { method, body } = req;
-
+  await headerauth(req, res);
   if (method === "POST") {
 
     const { group_id, action, user_id, role, key, name, description, email } = body;
@@ -30,12 +30,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         }
       }
     }
-    await headerauth(req, res);
+
     const result = await Group.createGroup(name, description);
     res.json(result);
     return;
   } else if (method === "GET") {
-    await headerauth(req, res);
 
     const result = await Group.getGroups();
     res.json(result);
