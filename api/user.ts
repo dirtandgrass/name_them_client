@@ -84,7 +84,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
         const user = regResult.user as UserData & { validation_code?: string }
 
-        console.log("User created", user)
+        //console.log("User created", user)
         if (user.email) {
           const host = process.env.EMAIL_URL || "http://localhost:3000";
           const sent = await mailer(user.email, "Validate your account", `Please validate your account by clicking this link: ${host}/validate?user_id=${user.user_id}&code=${user.validation_code}`)

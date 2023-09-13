@@ -13,6 +13,10 @@ function Village() {
     "create-group-form"
   ) as HTMLDialogElement;
 
+  let inviteForm = document.getElementById(
+    "invite-to-group-form"
+  ) as HTMLDialogElement;
+
   function showCreate() {
     if (!createForm) {
       createForm = document.getElementById(
@@ -20,6 +24,15 @@ function Village() {
       ) as HTMLDialogElement;
     }
     createForm?.showModal();
+  }
+
+  function showInvite() {
+    if (!inviteForm) {
+      inviteForm = document.getElementById(
+        "invite-to-group-form"
+      ) as HTMLDialogElement;
+    }
+    inviteForm?.showModal();
   }
 
   return (
@@ -39,10 +52,14 @@ function Village() {
         <h2>
           Selected Village: <span>{group.name}</span>
         </h2>
+        <div id="village-actions">
+          {group.role === "admin" ? (
+            <button onClick={showInvite}>Invite someone</button>
+          ) : null}
+        </div>
         <h3>Role:</h3>
         <span>{group.role}</span>
         <h3>Description:</h3>
-
         <p>{group.description}</p>
       </div>
     </section>

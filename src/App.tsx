@@ -59,7 +59,12 @@ function App() {
   if (isLoggedIn(user)) {
     conditionalBlock = <CreateGroup groups={groups} setGroups={setGroups} />;
     if (group.role === "admin") {
-      conditionalBlock = <InviteUserToGroup />;
+      conditionalBlock = (
+        <>
+          <CreateGroup groups={groups} setGroups={setGroups} />
+          <InviteUserToGroup />
+        </>
+      );
     }
   }
 

@@ -1,7 +1,7 @@
 //import "./DialogForm.css";
 
 import { useContext } from "react";
-import { createGroupMessage } from "../../types/Api";
+import { createGroupMessage, message } from "../../types/Api";
 import { GroupMembershipType } from "../../types/Group";
 import { user } from "../../types/User";
 import GroupContext from "../../utility/GroupContext";
@@ -11,7 +11,7 @@ import { z } from "zod";
 
 const GroupInviteSchema = z.object({
   email: z.string().email(),
-  role: z.enum(["admin", "member"]),
+  role: z.enum(["admin", "participant"]),
 });
 
 function InviteUserToGroup({}: {}) {
@@ -20,7 +20,7 @@ function InviteUserToGroup({}: {}) {
 
   function closeDialog() {
     const dialogForm = document.getElementById(
-      "create-group-form"
+      "invite-to-group-form"
     ) as HTMLDialogElement;
     dialogForm?.close();
   }
@@ -46,46 +46,45 @@ function InviteUserToGroup({}: {}) {
       data: {
         email,
         role,
+        group_id: group.group_id,
         action: "invite",
       },
-    })) as createGroupMessage;
+    })) as message;
 
-    if (result.success && result.group && result.group_id) {
-      const group = {
-        description: result.group.description,
-        group_id: result.group_id,
-        name: result.group.name,
-        role: result.group.role,
-      };
-
+    if (result.success) {
       closeDialog();
     } else {
       // TODO: show error to user
-      console.log("create group error", result.message);
+      console.log("invite to group error", result.message);
     }
   }
 
   return (
-    <dialog id="create-group-form">
-      <h2>Create Village</h2>
+    <dialog id="invite-to-group-form">
+      <h2>Invite to {group.name}</h2>
       <form onSubmit={handleCreate}>
         <div className="form_input"></div>
         <div className="form_input">
           <input
-            name="name"
-            autoComplete="name"
+            name="email"
+            autoComplete="email"
             type="text"
-            placeholder="Name"
+            placeholder="email address"
           />
         </div>
         <div className="form_input">
-          <textarea name="description" placeholder="Description"></textarea>
+          <select name="role">
+            <option value="admin">Administrator</option>
+            <option value="participant" selected>
+              Participant
+            </option>
+          </select>
         </div>
         <div className="form_actions">
           <button type="button" onClick={closeDialog}>
             Cancel
           </button>
-          <button type="submit">Create</button>
+          <button type="submit">Invite</button>
         </div>
       </form>
     </dialog>
