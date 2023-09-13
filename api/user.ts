@@ -108,6 +108,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const user_id = parseInt(req.query.user_id.toString());
     const result = await User.ValidateUser(user_id, req.query.code.toString());
 
+
     res.json({ message: result.message, success: result.success });
 
   }

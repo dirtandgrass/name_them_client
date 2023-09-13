@@ -3,6 +3,7 @@ import { AuthUser } from '../middleware/headerauth';
 import { randomHash } from '../utility/randomHash';
 import { response } from '../types/ApiMessage';
 import { z } from 'zod'
+import mailer from '../utility/mailer';
 const prisma = new PrismaClient()
 
 
@@ -99,17 +100,44 @@ export default class Group {
 
     const invite_key = randomHash();
 
-
+    // check if already a member who has accepted invite
+    if (guest_user_id !== 0) {
+      try {
+        const lookup = await prisma.group_user.findFirst({ where: { group_id: group_id, user_id: guest_user_id, accepted: true }, select: { group_id: true } });
+        if (lookup !== null) throw new Error("user is already a member of this group");
+      } catch (e) {
+        console.log(e);
+        return { "message": `unable to invite user, ${e.message}`, "success": false };
+      }
+    }
 
     try {
-      await prisma.group_user.create({ data: { group_id, user_id: guest_user_id == 0 ? null : guest_user_id, invite_key, role, email } });
-      // TODO: send invite email
+      await prisma.group_user.upsert({ where: { group_id_user_id: { group_id: group_id, user_id: guest_user_id }, email }, update: { invite_key, role }, create: { invite_key, role, group_id, email, user_id: guest_user_id === 0 ? null : guest_user_id } });
+
+
 
     } catch (e) {
       console.log(e);
       return { "message": "unable to invite user", "success": false };
     }
 
+    // get group info
+    try {
+      const group = await prisma.group.findFirst({ where: { group_id: group_id } });
+      if (!group) return { "message": "invalid group", "success": false };
+      if (email) {
+        const host = process.env.EMAIL_URL || "http://localhost:3000";
+
+        if (guest_user_id === 0) {
+          const sent = await mailer(email, `Village Invite: ${group.name}`, `You have been invited to join ${group.name} as a ${role} at NameThem, to accept, create an account on NameThem ${host} using ${email} as your address, validate, then go to the village tab and click accept `)
+        } else {
+          const sent = await mailer(email, `Village Invite: ${group.name}`, `You have been invited to join ${group.name} as a ${role}, to accept, visit namethem ${host}, go to the village tab and click accept `)
+        }
+
+      }
+    } catch (e) {
+      return { "message": `error getting group information: ${e.message}`, "success": false };
+    }
     return { "message": "success", "success": true };
   }
 
@@ -140,19 +168,7 @@ export default class Group {
 
   }
 
-  // static async getOwnedGroups(): Promise<{ message: string, count?: number, data?: Record<string, unknown>[], success: boolean }> {
-  //   const user_id = AuthUser?.user_id || 0;
-  //   if (user_id === 0) return { "message": "not logged in", "success": false };
 
-  //   try {
-  //     const result = await prisma.group.findMany({ where: { created_user_id: user_id } });
-  //     return { "message": "success", "success": true, "count": result.length, "data": result };
-  //   } catch (e) {
-  //     console.log(e);
-  //     return { "message": "unable to get groups", "success": false };
-  //   }
-
-  // }
 
   /* get groups the user is a member of, returns group_id, name, description, role */
   static async getGroups(): Promise<response> {

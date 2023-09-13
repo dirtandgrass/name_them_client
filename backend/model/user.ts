@@ -75,6 +75,13 @@ export default class User {
       const user = await prisma.user.update(
         { where: { user_id: user_id, validation_code: code, validated: false }, data: { validated: true, validation_code: null } }
       );
+
+      // get email
+      const email = user.email;
+
+      // set user_id of all group invites with matching email
+      await prisma.group_user.updateMany({ where: { email, user_id: null }, data: { user_id: user_id } });
+
       return { user: user, message: "User validated", success: true };
     } catch (error) {
       return { message: "User not validated", success: false };
