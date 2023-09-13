@@ -102,7 +102,7 @@ export default class Group {
 
 
     try {
-      await prisma.group_user.create({ data: { group_id, user_id: guest_user_id == 0 ? null : guest_user_id, invite_key, role } });
+      await prisma.group_user.create({ data: { group_id, user_id: guest_user_id == 0 ? null : guest_user_id, invite_key, role, email } });
       // TODO: send invite email
 
     } catch (e) {
