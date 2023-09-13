@@ -65,17 +65,26 @@ export default class Group {
     const invited_user = await prisma.user.findFirst({ where: { email: p_result.data }, select: { user_id: true } });
 
 
-    return await Group.inviteUser(group_id, invited_user ? invited_user.user_id : 0, role);
+    return await Group.inviteUser(group_id, invited_user ? invited_user.user_id : 0, role, email);
 
   }
 
-  static async inviteUser(group_id: number, guest_user_id: number = 0, role: Role = "participant"): Promise<response> {
+  static async inviteUser(group_id: number, guest_user_id: number = 0, role: Role = "participant", email: string | undefined = undefined): Promise<response> {
     const user_id = AuthUser?.user_id || 0;
     if (user_id === 0) return { "message": "not logged in", "success": false, error: 401 };
     if (!Number.isInteger(group_id) || !Number.isInteger(guest_user_id)) {
       return { "message": "invalid data", "success": false };
     }
+    if (guest_user_id === 0 && !email) { // can't invite a user with neither email or user_id
+      return { "message": "invalid data", "success": false };
+    }
+    if (!email) {
+      email = (await prisma.user.findFirst({ where: { user_id: guest_user_id }, select: { email: true } }))?.email;
 
+      if (!email) {
+        return { "message": "email address not found", "success": false };
+      }
+    }
 
     try {
       const lookup = await prisma.group_user.findFirst({ where: { group_id: group_id, user_id: user_id, role: "admin" }, select: { group_id: true } });
