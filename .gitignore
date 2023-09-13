@@ -14,3 +14,5 @@ yarn-error.log*
 .npm/
 .vercel
 etc/
+.env
+.env
