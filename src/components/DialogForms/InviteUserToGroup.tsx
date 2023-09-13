@@ -73,11 +73,9 @@ function InviteUserToGroup({}: {}) {
           />
         </div>
         <div className="form_input">
-          <select name="role">
+          <select name="role" defaultValue={"participant"}>
             <option value="admin">Administrator</option>
-            <option value="participant" selected>
-              Participant
-            </option>
+            <option value="participant">Participant</option>
           </select>
         </div>
         <div className="form_actions">

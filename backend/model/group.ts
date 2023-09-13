@@ -4,6 +4,7 @@ import { randomHash } from '../utility/randomHash';
 import { response } from '../types/ApiMessage';
 import { z } from 'zod'
 import mailer from '../utility/mailer';
+import { error } from 'console';
 const prisma = new PrismaClient()
 
 
@@ -93,7 +94,7 @@ export default class Group {
       if (lookup === null) throw new Error("not an admin of this group, or invalid group");
     } catch (e) {
       console.log(e);
-      return { "message": `unable to invite user, you must be the owner/creator of the group to invite: ${e.message}`, "success": false };
+      return { "message": `unable to invite user, you must be the owner/creator of the group to invite: ${(e as Error).message}`, "success": false };
     }
 
 
@@ -107,7 +108,7 @@ export default class Group {
         if (lookup !== null) throw new Error("user is already a member of this group");
       } catch (e) {
         console.log(e);
-        return { "message": `unable to invite user, ${e.message}`, "success": false };
+        return { "message": `unable to invite user, ${(e as Error).message}`, "success": false };
       }
     }
 
@@ -136,7 +137,8 @@ export default class Group {
 
       }
     } catch (e) {
-      return { "message": `error getting group information: ${e.message}`, "success": false };
+
+      return { "message": `error getting group information: ${(e as Error).message}`, "success": false };
     }
     return { "message": "success", "success": true };
   }
