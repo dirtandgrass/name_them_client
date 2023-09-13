@@ -61,18 +61,15 @@ export default class Group {
     const p_result = emailSchema.safeParse(email);
     if (!p_result.success) return { "message": `invalid email ${p_result.error}`, "success": false };
 
-    //try {
-    const lookup = await prisma.user.findFirst({ where: { email: p_result.data }, select: { user_id: true } });
-    console.log(lookup);
-    //} catch (e) {
 
-    //}
+    const invited_user = await prisma.user.findFirst({ where: { email: p_result.data }, select: { user_id: true } });
 
-    return { message: "success", success: true, data: lookup };
+
+    return await Group.inviteUser(group_id, invited_user ? invited_user.user_id : 0, role);
 
   }
 
-  static async inviteUser(group_id: number, guest_user_id: number, role: Role = "participant"): Promise<response> {
+  static async inviteUser(group_id: number, guest_user_id: number = 0, role: Role = "participant"): Promise<response> {
     const user_id = AuthUser?.user_id || 0;
     if (user_id === 0) return { "message": "not logged in", "success": false, error: 401 };
     if (!Number.isInteger(group_id) || !Number.isInteger(guest_user_id)) {
@@ -81,18 +78,22 @@ export default class Group {
 
 
     try {
-      const lookup = await prisma.group.findFirst({ where: { group_id: group_id, created_user_id: user_id } });
+      const lookup = await prisma.group_user.findFirst({ where: { group_id: group_id, user_id: user_id, role: "admin" }, select: { group_id: true } });
       console.log(lookup);
+      if (lookup === null) throw new Error("not an admin of this group, or invalid group");
     } catch (e) {
       console.log(e);
-      return { "message": "unable to invite user, you must be the owner/creator of the group to invite", "success": false };
+      return { "message": `unable to invite user, you must be the owner/creator of the group to invite: ${e.message}`, "success": false };
     }
+
+
+
     const invite_key = randomHash();
 
 
 
     try {
-      await prisma.group_user.create({ data: { group_id, user_id: guest_user_id, invite_key, role } });
+      await prisma.group_user.create({ data: { group_id, user_id: guest_user_id == 0 ? null : guest_user_id, invite_key, role } });
       // TODO: send invite email
 
     } catch (e) {
