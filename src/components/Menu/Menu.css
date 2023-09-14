@@ -4,7 +4,6 @@
     align-items: center;
     width: 100%;
     background-color: rgba(255, 255, 255, 0.4);
-    border-bottom: 1px solid #e5e5e5;
     padding: 7px 0;
 
 overflow: hidden;
@@ -14,7 +13,7 @@ overflow: hidden;
 
 .main-menu ul {
     display: flex;
-    gap: 1dvw;
+    gap: 1.5dvw;
     list-style: none;
     margin: 0;
     padding: 0;
@@ -22,7 +21,7 @@ overflow: hidden;
 
     >* {
         text-decoration: underline;
-        padding: 2px;
+        padding: 6px;
         position: relative;
 
 
@@ -34,14 +33,13 @@ overflow: hidden;
     >*::before {
         content: "";
         display: block;
-        position :absolute;
-        top:-2px;
-        left:-5px;
-        padding: 6px;
-
+        position: absolute;
+        top: 1px;
+        left: -4px;
+        padding: 4px;
         border-radius: 6px;
         width: 100%;
-        height: 35px;
+        height: 21px;
         z-index: -1;
     }
 

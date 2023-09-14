@@ -1,6 +1,4 @@
-import { GroupMembershipType } from "../../types/Group";
 import { PageType } from "../../types/Menu";
-import { user } from "../../types/User";
 import Names from "./Names/Names";
 import Results from "./Results/Results";
 import Village from "./Village/Village";

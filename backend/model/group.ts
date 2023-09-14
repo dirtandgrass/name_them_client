@@ -182,7 +182,7 @@ export default class Group {
       const result = await prisma.group_user.findMany({ where: { user_id: user_id }, select: { role: true, group_id: true, group: { select: { name: true, description: true } } } });
       return { "message": "success", "success": true, "data": result };
     } catch (e) {
-      //console.log(e);```
+      //console.log(e);
       return { "message": "unable to get groups", "success": false };
     }
 

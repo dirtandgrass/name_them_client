@@ -16,16 +16,16 @@ function Menu({
     user.user_id > 0 ? (
       <>
         <li
-          onClick={() => setPage(PageType.results)}
-          className={page == PageType.results ? "active" : "inactive"}
-        >
-          Results
-        </li>
-        <li
           onClick={() => setPage(PageType.groups)}
           className={page == PageType.groups ? "active" : "inactive"}
         >
           Village
+        </li>{" "}
+        <li
+          onClick={() => setPage(PageType.results)}
+          className={page == PageType.results ? "active" : "inactive"}
+        >
+          Results
         </li>
       </>
     ) : (
@@ -38,7 +38,7 @@ function Menu({
           onClick={() => setPage(PageType.names)}
           className={page == PageType.names ? "active" : "inactive"}
         >
-          Names
+          Vote
         </li>
 
         {utilityMenu}
