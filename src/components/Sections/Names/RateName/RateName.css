@@ -90,6 +90,8 @@ input:checked + #names-for-sex  {
 }
 
 
+
+
 .name-source {
   padding-left: 3px;
   height: 40px;
@@ -100,8 +102,13 @@ input:checked + #names-for-sex  {
     font-size: 1.4rem;
   width: 20%;
   padding: 1.3dvh 0;
-}
+  transition: translate 0.4s;
 
+}
+.name-controls>button:hover {
+    transition: translate 0.1s;
+    translate: 0 -0.25rem;
+  }
 .boy {
   border-color: var(--message-border-color-boy);
 }

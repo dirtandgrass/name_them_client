@@ -19,16 +19,17 @@ overflow: hidden;
     padding: 0;
 
 
-    >* {
+    >li {
         text-decoration: underline;
         padding: 6px;
         position: relative;
 
-
     }
-    :hover {
+    >li:hover {
         cursor: pointer;
     }
+
+
 
     >*::before {
         content: "";
@@ -43,12 +44,15 @@ overflow: hidden;
         z-index: -1;
     }
 
+
+
+
     >.active::before {
-        background-color: #fff;
+        background-color: #99C7FF;
     }
 
     >.inactive:hover::before {
-        background-color: #e5e5e5;
+        background-color: #f3f3f3;
     }
 
 }

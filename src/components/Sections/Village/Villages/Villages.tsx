@@ -2,24 +2,28 @@ import { useContext } from "react";
 import GroupContext from "../../../../utility/GroupContext";
 import UserContext from "../../../../utility/UserContext";
 
-function VillageInfo() {
+function Villages() {
   const { group } = useContext(GroupContext);
   const { user } = useContext(UserContext);
 
   if (group.role === "admin") {
   }
 
+  let createForm = document.getElementById(
+    "create-group-form"
+  ) as HTMLDialogElement;
+
   let inviteForm = document.getElementById(
     "invite-to-group-form"
   ) as HTMLDialogElement;
 
-  function showInvite() {
-    if (!inviteForm) {
-      inviteForm = document.getElementById(
-        "invite-to-group-form"
+  function showCreate() {
+    if (!createForm) {
+      createForm = document.getElementById(
+        "create-group-form"
       ) as HTMLDialogElement;
     }
-    inviteForm?.showModal();
+    createForm?.showModal();
   }
 
   return (
@@ -32,19 +36,11 @@ function VillageInfo() {
           people you invite can participate and see results.
         </li>
       </ul> */}
-
-      <div className="selected">
-        <h2>{group.name}</h2>
-        <em>{group.role}</em>
-        <p>{group.description}</p>
-        <div id="village-actions">
-          {group.role === "admin" ? (
-            <button onClick={showInvite}>Invite someone</button>
-          ) : null}
-        </div>
+      <div>
+        <button onClick={showCreate}>Create New Village</button>
       </div>
     </section>
   );
 }
 
-export default VillageInfo;
+export default Villages;

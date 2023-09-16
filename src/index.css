@@ -58,7 +58,7 @@ h2 {
 }
 
 
-button:hover {
+button:hover,input:hover,select:hover {
   background: linear-gradient(45deg,rgba(210,210,210,0.8),rgba(255,255,255,1));
 }
 
@@ -68,4 +68,5 @@ button, input,select {
   font-size: 1.05rem;
   border-radius: 5px;
   border: 2px solid rgb(153, 153, 255,0.7);
+
 }
