@@ -38,12 +38,22 @@
 
 
 main {
-  margin: 5px;
   background-color: white;
   border-radius: 6px;
-  padding: 6px;
   box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+  margin: 0 1.4dvw;
+
+
 }
+  main>#rate-name, .results {
+    margin:6px;
+  }
+
+  main>.village-section {
+    margin-top:6px;
+  }
+
+
 
 ul {
   margin-top:0;

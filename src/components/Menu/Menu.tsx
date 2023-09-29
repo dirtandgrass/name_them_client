@@ -1,7 +1,7 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { PageType } from "../../types/Menu";
-import "./Menu.css";
 import UserContext from "../../utility/UserContext";
+import "./Menu.css";
 
 function Menu({
   setPage,

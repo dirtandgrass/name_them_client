@@ -27,7 +27,7 @@ function Villages() {
   }
 
   return (
-    <section className="village-section">
+    <section className="my-villages">
       {/* <ul>
         <li>Villages are formed to name a new family member.</li>
         <li>Each village has settings to decide what genders can be named.</li>

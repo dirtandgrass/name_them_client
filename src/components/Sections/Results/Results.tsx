@@ -1,9 +1,9 @@
 import { useContext, useEffect, useState } from "react";
 import { topRated } from "../../../remote/rating";
 import { Sex, ratingMessage, ratingRecord } from "../../../types/Api";
-import Spinner from "../../Spinner/Spinner";
-import UserContext from "../../../utility/UserContext";
 import GroupContext from "../../../utility/GroupContext";
+import UserContext from "../../../utility/UserContext";
+import Spinner from "../../Spinner/Spinner";
 
 function Results() {
   const { user } = useContext(UserContext);
@@ -92,7 +92,7 @@ function Results() {
     );
 
   return (
-    <section>
+    <section className="results">
       <div id="results">
         <h2>Top Rated Names</h2>
         <div>

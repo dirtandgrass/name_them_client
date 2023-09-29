@@ -15,11 +15,6 @@
 }
 
 
-.logged-in .loading {
-  transform: translateY(20px);
-}
-
-
 
 .settled {
   opacity: 0;

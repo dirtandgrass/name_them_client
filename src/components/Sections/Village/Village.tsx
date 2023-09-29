@@ -1,6 +1,5 @@
-import { useContext, useState } from "react";
-import GroupContext from "../../../utility/GroupContext";
-import UserContext from "../../../utility/UserContext";
+import { useState } from "react";
+import "./Village.css";
 import VillageInfo from "./VillageInfo/VillageInfo";
 import Villages from "./Villages/Villages";
 
@@ -29,15 +28,21 @@ function Village() {
     <section className="village-section">
       <menu className="village-tabs">
         <ul>
-          <li>
-            <a onClick={() => setVillageTabs(VillageTabs.VillageInfo)}>
-              Selected Village
-            </a>
+          <li
+            onClick={() => setVillageTabs(VillageTabs.VillageInfo)}
+            className={
+              villageTabs == VillageTabs.VillageInfo ? "active" : "inactive"
+            }
+          >
+            Selected Village
           </li>
-          <li>
-            <a onClick={() => setVillageTabs(VillageTabs.Villages)}>
-              My Villages
-            </a>
+          <li
+            onClick={() => setVillageTabs(VillageTabs.Villages)}
+            className={
+              villageTabs == VillageTabs.Villages ? "active" : "inactive"
+            }
+          >
+            My Villages
           </li>
         </ul>
       </menu>
