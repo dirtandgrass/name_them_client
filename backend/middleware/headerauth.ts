@@ -1,6 +1,6 @@
 
-import User, { UserData } from '../model/user';
 import { VercelRequest, VercelResponse } from '@vercel/node';
+import User, { UserData } from '../model/user';
 
 export const auth_salt = 6;
 
@@ -14,6 +14,7 @@ export default async function (req: VercelRequest, res: VercelResponse) {
     if (result?.user_id) {
 
       AuthUser = result;
+      return;
     } else {
       AuthUser = null;
     }
