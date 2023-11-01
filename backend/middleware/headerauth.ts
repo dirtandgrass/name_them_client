@@ -17,17 +17,19 @@ export default async function (req: VercelRequest, res: VercelResponse) {
       return;
     } else {
       AuthUser = null;
+      return;
     }
   } else if (req.headers["x-namethem-email"] && req.headers["x-namethem-password"]) {
     const result = await User.EmailPasswordLogin(req.headers["x-namethem-email"].toString(), req.headers["x-namethem-password"].toString());
     //console.log(result);
     if (result?.user_id) {
       AuthUser = result;
+      return;
     } else {
       AuthUser = null;
+      return
     }
-  } else {
-    AuthUser = null;
   }
 
+  AuthUser = null;
 }
