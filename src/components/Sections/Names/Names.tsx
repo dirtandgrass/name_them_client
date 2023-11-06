@@ -1,11 +1,10 @@
 import { useContext } from "react";
-import { GroupMembershipType } from "../../../types/Group";
-import { isLoggedIn, user } from "../../../types/User";
-import UserContext from "../../../utility/UserContext";
+import GroupContext from "../../../contexts/GroupContext";
+import UserContext from "../../../contexts/UserContext";
+import { isLoggedIn } from "../../../types/User";
 import NameLoader from "./NameLoader/NameLoader";
 import RandomNameList from "./RandomNameList/RandomNameList";
 import RateName from "./RateName/RateName";
-import GroupContext from "../../../utility/GroupContext";
 
 function Names() {
   const { user } = useContext(UserContext);

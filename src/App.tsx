@@ -1,26 +1,26 @@
-import "./App.css";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import "./App.css";
 import Menu from "./components/Menu/Menu";
 
-import Login from "./components/Login/Login";
-import Logo from "./components/Logo/Logo";
-import RegistrationForm from "./components/Login/RegistrationForm/RegistrationForm";
 import GroupInfo from "./components/GroupInfo/GroupInfo";
+import Login from "./components/Login/Login";
+import RegistrationForm from "./components/Login/RegistrationForm/RegistrationForm";
+import Logo from "./components/Logo/Logo";
 import Sections from "./components/Sections/Sections";
 
-import { user, defaultUser, isLoggedIn } from "./types/User";
-import { PageType } from "./types/Menu";
 import { GroupMembershipType, defaultGroup } from "./types/Group";
+import { PageType } from "./types/Menu";
+import { defaultUser, isLoggedIn, user } from "./types/User";
 
 import useStorage from "./hooks/useStorage";
 
-import { validate } from "./remote/user";
-import LoadingContext from "./utility/LoadingContext";
 import CreateGroup from "./components/DialogForms/CreateGroup";
-import GroupContext from "./utility/GroupContext";
-import UserContext from "./utility/UserContext";
-import localFetch, { setSetUserFunction } from "./utility/LocalFetch";
 import InviteUserToGroup from "./components/DialogForms/InviteUserToGroup";
+import GroupContext from "./contexts/GroupContext";
+import LoadingContext from "./contexts/LoadingContext";
+import UserContext from "./contexts/UserContext";
+import { validate } from "./remote/user";
+import { setSetUserFunction } from "./utility/LocalFetch";
 //import UserContext from "./utility/UserContext";
 
 function App() {

@@ -1,13 +1,11 @@
 //import "./DialogForm.css";
 
 import { useContext } from "react";
-import { createGroupMessage, message } from "../../types/Api";
-import { GroupMembershipType } from "../../types/Group";
-import { user } from "../../types/User";
-import GroupContext from "../../utility/GroupContext";
-import localFetch, { HttpMethod } from "../../utility/LocalFetch";
-import UserContext from "../../utility/UserContext";
 import { z } from "zod";
+import GroupContext from "../../contexts/GroupContext";
+import UserContext from "../../contexts/UserContext";
+import { message } from "../../types/Api";
+import localFetch, { HttpMethod } from "../../utility/LocalFetch";
 
 const GroupInviteSchema = z.object({
   email: z.string().email(),

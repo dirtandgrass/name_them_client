@@ -1,11 +1,11 @@
+import { useContext } from "react";
+import GroupContext from "../../contexts/GroupContext";
+import UserContext from "../../contexts/UserContext";
 import { PageType } from "../../types/Menu";
 import Names from "./Names/Names";
 import Results from "./Results/Results";
-import Village from "./Village/Village";
 import "./Sections.css";
-import GroupContext from "../../utility/GroupContext";
-import { useContext } from "react";
-import UserContext from "../../utility/UserContext";
+import Village from "./Village/Village";
 
 function Sections({ page }: { page: PageType }) {
   const { user } = useContext(UserContext);

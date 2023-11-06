@@ -1,6 +1,6 @@
 import { useContext } from "react";
+import UserContext from "../../contexts/UserContext";
 import { PageType } from "../../types/Menu";
-import UserContext from "../../utility/UserContext";
 import "./Menu.css";
 
 function Menu({

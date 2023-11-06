@@ -2,18 +2,18 @@ import { useContext, useEffect, useState } from "react";
 
 import { NameType } from "../RandomNameList/RandomNameList";
 
-import "./RateName.css";
-import NameSource from "../NameSource/NameSource";
 import { fetchUnratedNames, rateName } from "../../../../remote/name";
+import NameSource from "../NameSource/NameSource";
+import "./RateName.css";
 
-import { setLoading as setNameLoading } from "../NameLoader/NameLoader";
-import AwaitedBuffer from "../../../../utility/AwaitedBuffer";
-import { Sex } from "../../../../types/Api";
 import useStorage from "../../../../hooks/useStorage";
+import { Sex } from "../../../../types/Api";
+import AwaitedBuffer from "../../../../utility/AwaitedBuffer";
+import { setLoading as setNameLoading } from "../NameLoader/NameLoader";
 
+import GroupContext from "../../../../contexts/GroupContext";
+import UserContext from "../../../../contexts/UserContext";
 import { GlobalNamesQueue } from "../../../../utility/NamesQueue";
-import UserContext from "../../../../utility/UserContext";
-import GroupContext from "../../../../utility/GroupContext";
 
 export enum NameRating {
   No = 0,

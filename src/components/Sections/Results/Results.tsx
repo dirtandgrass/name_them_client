@@ -1,8 +1,8 @@
 import { useContext, useEffect, useState } from "react";
+import GroupContext from "../../../contexts/GroupContext";
+import UserContext from "../../../contexts/UserContext";
 import { topRated } from "../../../remote/rating";
 import { Sex, ratingMessage, ratingRecord } from "../../../types/Api";
-import GroupContext from "../../../utility/GroupContext";
-import UserContext from "../../../utility/UserContext";
 import Spinner from "../../Spinner/Spinner";
 
 function Results() {

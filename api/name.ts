@@ -1,10 +1,8 @@
 
-import Name, { Sex, NameParams } from '../backend/model/name';
+import { VercelRequest, VercelResponse } from '@vercel/node';
 import headerauth, { AuthUser } from '../backend/middleware/headerauth';
 import Group from '../backend/model/group';
-import { VercelRequest, VercelResponse } from '@vercel/node';
-
-import { response } from '../backend/types/ApiMessage';
+import Name, { NameParams, Sex } from '../backend/model/name';
 
 
 let parseSourceandSex = (req: VercelRequest): NameParams => {
@@ -17,9 +15,6 @@ let parseSourceandSex = (req: VercelRequest): NameParams => {
 
     if (req.query?.sex) { // querystring specified sex
       const qs = req.query.sex.toString();
-
-
-
 
       //console.log("QS:", qs);
       queryParams.sex = qs as Sex ?? Sex.all;

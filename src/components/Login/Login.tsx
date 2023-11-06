@@ -1,12 +1,12 @@
-import { user, defaultUser, isLoggedIn } from "../../types/User";
+import { defaultUser, isLoggedIn } from "../../types/User";
 import "./Login.css";
 
 import { useContext, useEffect } from "react";
-import LoginForm from "./LoginForm/LoginForm";
+import GroupContext from "../../contexts/GroupContext";
+import UserContext from "../../contexts/UserContext";
+import { defaultGroup } from "../../types/Group";
 import { PageType } from "../../types/Menu";
-import { GroupMembershipType, defaultGroup } from "../../types/Group";
-import GroupContext from "../../utility/GroupContext";
-import UserContext from "../../utility/UserContext";
+import LoginForm from "./LoginForm/LoginForm";
 
 function Login({
   setPage,

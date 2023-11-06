@@ -1,13 +1,12 @@
 //import "./DialogForm.css";
 
 import { useContext } from "react";
+import { z } from "zod";
+import GroupContext from "../../contexts/GroupContext";
+import UserContext from "../../contexts/UserContext";
 import { createGroupMessage } from "../../types/Api";
 import { GroupMembershipType } from "../../types/Group";
-import { user } from "../../types/User";
-import GroupContext from "../../utility/GroupContext";
 import localFetch, { HttpMethod } from "../../utility/LocalFetch";
-import UserContext from "../../utility/UserContext";
-import { z } from "zod";
 
 const GroupSchema = z.object({
   name: z.string().min(1).max(100),

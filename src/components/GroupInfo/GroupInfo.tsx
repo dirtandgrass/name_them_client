@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useContext } from "react";
-import localFetch from "../../utility/LocalFetch";
-import { isLoggedIn, user } from "../../types/User";
+import React, { useContext, useEffect, useState } from "react";
+import GroupContext from "../../contexts/GroupContext";
+import UserContext from "../../contexts/UserContext";
 import { GroupMembershipType } from "../../types/Group";
-import GroupContext from "../../utility/GroupContext";
-import UserContext from "../../utility/UserContext";
+import { isLoggedIn } from "../../types/User";
+import localFetch from "../../utility/LocalFetch";
 
 export default function GroupInfo({
   groups,

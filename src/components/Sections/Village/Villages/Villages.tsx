@@ -1,6 +1,6 @@
 import { useContext } from "react";
-import GroupContext from "../../../../utility/GroupContext";
-import UserContext from "../../../../utility/UserContext";
+import GroupContext from "../../../../contexts/GroupContext";
+import UserContext from "../../../../contexts/UserContext";
 
 function Villages() {
   const { group } = useContext(GroupContext);

@@ -1,10 +1,10 @@
-import "./LoginForm.css";
-import localFetch, { HttpMethod } from "../../../utility/LocalFetch";
-import { user, defaultUser } from "../../../types/User";
 import { useContext } from "react";
-import LoadingContext from "../../../utility/LoadingContext";
+import LoadingContext from "../../../contexts/LoadingContext";
+import UserContext from "../../../contexts/UserContext";
 import { loginMessage } from "../../../types/Api";
-import UserContext from "../../../utility/UserContext";
+import { defaultUser } from "../../../types/User";
+import localFetch, { HttpMethod } from "../../../utility/LocalFetch";
+import "./LoginForm.css";
 
 function LoginForm() {
   const { setLoading: setGlobalLoading } = useContext(LoadingContext);
